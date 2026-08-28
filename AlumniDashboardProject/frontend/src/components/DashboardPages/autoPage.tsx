@@ -1,0 +1,210 @@
+import StatCard from '../StatCard';
+import { useState, useEffect, useMemo } from 'react';
+import { Users, Briefcase, DollarSign, GraduationCap } from 'lucide-react';
+import PieChart from './DashboardElements/PieChartPer';
+import { alumniPerProgram } from '#/src/types';
+import { Row } from './DashboardElements/PieChartPer';
+import { apiService } from '../../../services/api';
+import ChartCard from '../ChartCard';
+
+import { Pie } from 'react-chartjs-2';
+
+
+import { colors } from './DashboardElements/PieChartPer';
+
+interface Props {
+    numPerProgram: Row[];
+    department_id: number;
+    departmentName: string;
+    chartOptions: any;
+}
+
+const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName, chartOptions }) => {
+
+    const [data, setData] = useState({
+        getApproval: [],
+        AUTOIndustry: [],
+        AUTOCert: []
+
+    });
+
+    const pieOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+            padding: 0
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            datalabels: {
+                display: false
+            }
+        },
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await apiService.getDeptInfo(department_id);
+                setData(data);
+
+                console.log(data);
+            }
+            catch (err) {
+                console.error('Error loading ' + departmentName + ' page: ' + err);
+            }
+        };
+
+        fetchData();
+    }, [])
+
+
+    const AUTOIndustry = {
+        labels: data.AUTOIndustry.map(item => item.value_text),
+        datasets: [
+            {
+                label: 'Percent of Alumni',
+                data: data.AUTOIndustry.map(item => item.percentage),
+                backgroundColor: '#7a1e96',
+                borderColor: '#4a0066',
+                borderWidth: 2,
+
+            },
+        ],
+    };
+
+    const coloredPieChart = useMemo(() => {
+        if (!AUTOIndustry) return AUTOIndustry;
+
+        return {
+            ...AUTOIndustry,
+            datasets: AUTOIndustry.datasets.map((ds: any) => ({
+                ...ds,
+                backgroundColor: AUTOIndustry.labels.map(
+                    (_: string, idx: number) => colors[idx % colors.length]
+                ),
+                borderWidth: 0,
+            })),
+        };
+    }, [AUTOIndustry]);
+
+    return (
+        <div className="grid grid-cols-9 gap-6 mb-8">
+            <PieChart
+                data={numPerProgram}
+                chartOptions={chartOptions}
+                filterKey="department_id"
+                filterValue={department_id}
+                title={`Recent Grads Per Program: ${departmentName}`}
+                itemLabel="program"
+            />
+
+            <div className="col-span-3">
+                <ChartCard
+                    title="Recommendation of Program of Study">
+                    <div className="space-y-3 min-w-full ">
+                        {data.getApproval.map((item) => {
+                            return (
+                                <div
+                                    key={item.name}
+                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                >
+                                    <div
+                                        className={`flex items-center gap-3 ${data.getApproval[0]?.name === item.name
+                                            ? 'font-bold text-lg'
+                                            : ''
+                                            }`}
+                                    >
+                                        <span>{item.name}</span>
+                                    </div>
+
+                                    <span
+                                        className={`flex items-center gap-3 ${data.getApproval[0]?.percentage === item.percentage
+                                            ? 'font-bold text-lg'
+                                            : ''
+                                            }`}
+                                    >
+                                        {item.percentage} %
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                </ChartCard>
+            </div>
+
+
+            <div className="col-span-6">
+                <ChartCard
+                    title="Student Confidence in Pursuing Certification Post-Graduation">
+                    <div className="space-y-3 min-w-full ">
+                        {data.AUTOCert.map((item) => {
+                            return (
+                                <div
+                                    key={item.value_text}
+                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                >
+                                    <div
+                                        className={`flex items-center gap-3 ${data.AUTOCert[0]?.value_text === item.value_text
+                                            ? 'font-bold text-lg'
+                                            : ''
+                                            }`}
+                                    >
+                                        <span>{item.value_text}</span>
+                                    </div>
+
+                                    <span
+                                        className={`flex items-center gap-3 ${data.AUTOCert[0]?.percentage === item.percentage && data.AUTOCert[0]?.value_text === item.value_text
+                                            ? 'font-bold text-lg'
+                                            : ''
+                                            }`}
+                                    >
+                                        {item.percentage} %
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                </ChartCard>
+            </div>
+
+
+            <div className="col-span-9">
+
+                <ChartCard
+                    title="Areas of Automotive Industry Where Students Are Seeking Employment"
+                >
+                    <div className="space-y-3 min-w-full h-full self-start">
+
+                        <div className="flex items-center gap-8">
+                            <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
+                                {AUTOIndustry.labels.map((labelHours: string, idx: number) => (
+                                    <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
+                                        <span
+                                            className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
+                                            style={{ backgroundColor: colors[idx % colors.length] }}
+                                        />
+                                        <span>{labelHours}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="relative h-80 flex-1">
+                                <Pie
+                                    options={pieOptions}
+                                    data={coloredPieChart}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </ChartCard>
+            </div>
+        </div>
+    )
+};
+
+export default AUTOPage;

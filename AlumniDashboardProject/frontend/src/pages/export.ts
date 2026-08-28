@@ -1,0 +1,10 @@
+export { default as OverviewElements } from '../components/DashboardPages/OverviewPage';
+export { default as AUTOPage } from '../components/DashboardPages/autoPage';
+export { default as CBSPage } from '../components/DashboardPages/cbsPage';
+export { default as ECEPage } from '../components/DashboardPages/ecePage';
+export { default as MSEPage } from '../components/DashboardPages/msePage';
+export { default as MEPage } from '../components/DashboardPages/mePage';
+export { default as PSPage } from '../components/DashboardPages/psPage';
+export { default as SOCPage } from '../components/DashboardPages/socPage';
+export { default as EastInsights } from '../components/DashboardPages/EastInsights';
+export { default as GradPrograms } from '../components/DashboardPages/GradPrograms';
