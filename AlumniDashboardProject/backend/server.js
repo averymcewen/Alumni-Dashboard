@@ -26,6 +26,6 @@ app.use("/api/import", importRoutes);
 app.use("/api/mappings", mappingRoutes);
 app.use("/api/display", displayRoutes);
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", function () {
     console.log(`Server running on port ${PORT}`);
 });
