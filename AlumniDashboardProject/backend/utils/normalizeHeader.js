@@ -6,5 +6,4 @@ export default function normalizeString(header) {
         .replace(/[^\w]/g, "")
         .replace(/-/g, "")
         .replace(/,/g, '');
-    replace(/[()]/g, "");
 }

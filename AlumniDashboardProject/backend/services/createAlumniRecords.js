@@ -1,7 +1,7 @@
 import fs from "fs";
 import csv from "csv-parser";
 import pool from "../db/pool.js";
-import { normalizeString } from "../../backend/utils/normalizeHeader.js"
+import normalizeString from "../utils/normalizeHeader.js";
 import { normalizeSalary } from "./Maps for Normalizing/salaryNormalizer.js";
 import { detectMapping } from "./csvParsers.js";
 import { ensureQuestionExists } from "./csvImportHelpers.js";
