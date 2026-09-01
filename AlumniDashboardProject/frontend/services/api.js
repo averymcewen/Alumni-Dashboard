@@ -109,11 +109,7 @@ export const apiService = {
     },
 
     getDeptInfo: async (department_id) => {
-        const res = await API.get(`/display/deptSpecific`, {
-            params: {
-                department_id
-            }
-        });
+        const res = await API.get(`/display/deptSpecific/${department_id}`);
 
         return res.data;
     }

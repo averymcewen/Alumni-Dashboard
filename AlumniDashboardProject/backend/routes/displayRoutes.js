@@ -651,9 +651,9 @@ ORDER BY q.question_code, r.subquestion_text;`);
 
 })
 
-router.get("/deptSpecific", async (req, res) => {
+router.get("/deptSpecific/:id", async (req, res) => {
     try {
-        const departmentId = Number(req.query.department_id);
+        const departmentId = req.params.id;
 
         const [getApproval] = await pool.query(`
             
