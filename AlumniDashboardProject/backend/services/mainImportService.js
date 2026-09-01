@@ -87,7 +87,6 @@ async function savePendingMapping(connection, surveyVersionId, rawColumnName, sa
     }
 }
 
-
 /**
  * Main import function for response data CSV files. Allows user to upload a CSV containing a normal header with question desc codes (i.e. plans, engagement, etc). Also allows
  * users to upload a CSV containing two header rows - first being a machine readable header with the question codes, the second being actual question text. 
@@ -109,7 +108,6 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
     const connection = await pool.getConnection();
 
     const fileHash = await computeFileHash(filePath);
-
 
     const [existingBatch] = await connection.query(
         `SELECT import_batch_id
@@ -136,7 +134,6 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         const importBatchId = batchResult.insertId;
 
         console.log("BatchResult:" + batchResult);
-
         console.log("Imported Batch ID:" + importBatchId);
 
         const [batchCheck] = await connection.query(
@@ -158,10 +155,6 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
 
         const dbMappings = await getMappings(connection, surveyVersionId);
 
-        // THE FIX: buildRuntimeMappings needs to know which headers are
-        // dual-role for THIS survey version, or mapping.also_question is
-        // always null and findOrCreateAlumni's also_question check never
-        // fires — no error, it just silently has nothing to do.
         const dualRoleHeaders = getDualRoleHeaders(surveyVersionId);
         const runtimeMappings = buildRuntimeMappings(machineHeaders, questionHeaderMap, { dualRoleHeaders });
 
@@ -176,143 +169,152 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         let importedCount = 0;
         let skippedCount = 0;
 
-
         for (let i = 0; i < rows?.length; i++) {
             const row = rows[i];
 
-            const sourceResponseId = getSourceResponseId(row, mappings);
+            // Checkpoint before this row's inserts. If anything below throws,
+            // we roll back to here instead of aborting the whole import.
+            await connection.query("SAVEPOINT row_savepoint");
 
-            if (sourceResponseId) {
-                const [existingAttempt] = await connection.query(
-                    `SELECT survey_attempt_id
-             FROM survey_attempt
-             WHERE survey_version_id = ? AND source_response_id = ?`,
-                    [surveyVersionId, sourceResponseId]
+            try {
+                const sourceResponseId = getSourceResponseId(row, mappings);
+
+                if (sourceResponseId) {
+                    const [existingAttempt] = await connection.query(
+                        `SELECT survey_attempt_id
+                 FROM survey_attempt
+                 WHERE survey_version_id = ? AND source_response_id = ?`,
+                        [surveyVersionId, sourceResponseId]
+                    );
+
+                    if (existingAttempt?.length > 0) {
+                        warnings.push(`Skipping duplicate row with ResponseId: ${sourceResponseId}`);
+                        skippedCount++;
+                        await connection.query("RELEASE SAVEPOINT row_savepoint");
+                        continue;
+                    }
+                }
+
+                await connection.query(
+                    `INSERT INTO raw_import_row (import_batch_id, source_row_number, raw_payload_json)
+             VALUES (?, ?, ?)`,
+                    [importBatchId, i + 1, JSON.stringify(row)]
                 );
 
-                if (existingAttempt?.length > 0) {
-                    warnings.push(`Skipping duplicate row with ResponseId: ${sourceResponseId}`);
+                let alumniData;
+
+                try {
+                    alumniData = await findOrCreateAlumni(
+                        connection,
+                        row,
+                        mappings,
+                        surveyVersionId
+                    );
+                    console.log("Inserting alumni...");
+                }
+                catch (err) {
+                    console.error("findOrCreateAlumni failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
+
+                if (!alumniData?.alumniId) {
+                    warnings.push("Skipping row due to missing alumni identifier");
                     skippedCount++;
+                    await connection.query("RELEASE SAVEPOINT row_savepoint");
                     continue;
                 }
-            }
 
-            await connection.query(
-                `INSERT INTO raw_import_row (import_batch_id, source_row_number, raw_payload_json)
-         VALUES (?, ?, ?)`,
-                [importBatchId, i + 1, JSON.stringify(row)]
-            );
-            ;
+                try {
+                    await insertAlumniDegree(
+                        connection,
+                        mappings,
+                        alumniData.alumniId,
+                        alumniData.raw_degree_code,
+                        alumniData.survey_time,
+                        alumniData.degree_code
+                    );
+                }
+                catch (err) {
+                    console.error("InsertAlumniDegree failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
 
-            let alumniData;
+                let surveyAttemptId;
 
-            try {
-                alumniData = await findOrCreateAlumni(
-                    connection,
-                    row,
-                    mappings,
-                    surveyVersionId
-                );
-                console.log("Inserting alumni...");
-            }
-            catch (err) {
-                console.error("findOrCreateAlumni failed on row", i + 1);
-                console.error(row);
-                throw err;
-            }
+                try {
+                    surveyAttemptId = await createSurveyAttempt(
+                        connection,
+                        alumniData.alumniId,
+                        surveyVersionId,
+                        i + 1,
+                        sourceResponseId,
+                        alumniData.survey_time
+                    );
+                }
+                catch (err) {
+                    console.error("createSurveyAttempt failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
 
-            // still continue insert even all alumni are null
-            if (!alumniData?.alumniId) {
-                warnings.push("Skipping row due to missing alumni identifier");
-                skippedCount++;
-                continue;
-            }
+                try {
+                    await processRowResponses(
+                        connection,
+                        row,
+                        mappings,
+                        surveyVersionId,
+                        surveyAttemptId
+                    );
+                } catch (err) {
+                    console.error("processRowResponses failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
 
+                try {
+                    await createEmploymentFromRow(
+                        connection,
+                        row,
+                        mappings,
+                        surveyAttemptId,
+                        alumniData.alumniId
+                    );
+                    console.log("INSERTING EMPLOYMENT");
+                }
+                catch (err) {
+                    console.error("createEmploymentFromRow failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
 
-            // console.log("inserting alumni: " + alumniData.alumniId);
+                try {
+                    await createInternshipFromRow(
+                        connection,
+                        row,
+                        mappings,
+                        surveyAttemptId,
+                        alumniData.alumniId
+                    );
+                }
+                catch (err) {
+                    console.error("createInternshipFromRow failed on row", i + 1);
+                    console.error(row);
+                    throw err;
+                }
 
-            try {
-                await insertAlumniDegree(
-                    connection,
-                    mappings,
-                    alumniData.alumniId,
-                    alumniData.raw_degree_code,
-                    alumniData.survey_time,
-                    alumniData.degree_code
-                );
-            }
-            catch (err) {
-                console.error("InsertAlumniDegree failed on row", i + 1);
-                console.error(row);
-                throw err;
-            }
+                // Row succeeded -- drop the checkpoint, nothing to undo.
+                await connection.query("RELEASE SAVEPOINT row_savepoint");
+                importedCount++;
 
-            let surveyAttemptId;
-
-            try {
-
-                surveyAttemptId = await createSurveyAttempt(
-                    connection,
-                    alumniData.alumniId,
-                    surveyVersionId,
-                    i + 1,
-                    sourceResponseId,
-                    alumniData.survey_time
-                );
-            }
-            catch (err) {
-                console.error("createSurveyAttempt failed on row", i + 1);
-                console.error(row);
-                throw err;
-            }
-
-            try {
-                await processRowResponses(
-                    connection,
-                    row,
-                    mappings,
-                    surveyVersionId,
-                    surveyAttemptId
-                );
             } catch (err) {
-                console.error("processRowResponses failed on row", i + 1);
-                console.error(row);
-                throw err;
+                // Undo ONLY this row's partial writes -- previously
+                // successful rows in this same transaction are untouched.
+                await connection.query("ROLLBACK TO SAVEPOINT row_savepoint");
+                warnings.push(`Row ${i + 1} failed and was skipped: ${err.message}`);
+                skippedCount++;
             }
-
-            try {
-                await createEmploymentFromRow(
-                    connection,
-                    row,
-                    mappings,
-                    surveyAttemptId,
-                    alumniData.alumniId
-                );
-                console.log("INSERTING EMPLOYMENT");
-            }
-            catch (err) {
-                console.error("createEmploymentFromRow failed on row", i + 1);
-                console.error(row);
-                throw err;
-            }
-
-            try {
-                await createInternshipFromRow(
-                    connection,
-                    row,
-                    mappings,
-                    surveyAttemptId,
-                    alumniData.alumniId
-                );
-            }
-            catch (err) {
-                console.error("createInternshipFromRow failed on row", i + 1);
-                console.error(row);
-                throw err;
-            }
-
-            importedCount++;
-
         }
 
         await connection.query(
@@ -326,9 +328,6 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         await connection.commit();
         console.log("Commit Successful.");
 
-
-
-
         return {
             success: true,
             message: "Import completed successfully.",
@@ -339,13 +338,13 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
             warnings
         };
     } catch (error) {
-        // await connection.rollback();
+        // Fatal, non-row-specific errors still roll back everything.
+        await connection.rollback();
         throw error;
     } finally {
         connection.release();
     }
 }
-
 
 /*
 A function to handle uploads of Employment CSV
