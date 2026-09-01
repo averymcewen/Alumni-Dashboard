@@ -96,7 +96,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                 data={numPerProgram}
                 chartOptions={chartOptions}
                 filterKey="department_id"
-                filterValue={department_id}
+                filterValue={department_id || 2}
                 title={`Recent Grads Per Program: ${departmentName}`}
                 itemLabel="program"
             />

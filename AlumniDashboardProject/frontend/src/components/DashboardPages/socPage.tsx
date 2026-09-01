@@ -97,7 +97,7 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 data={numPerProgram}
                 chartOptions={chartOptions}
                 filterKey="department_id"
-                filterValue={department_id}
+                filterValue={department_id || 1}
                 title={`Recent Grads Per Program: ${departmentName}`}
                 itemLabel="program"
             />
