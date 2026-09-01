@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
+import { apiService } from "#/services/api";
 
 function UploadPage() {
     const [versions, setVersions] = useState<any[]>([]);
@@ -31,9 +32,12 @@ function UploadPage() {
     useEffect(() => {
         const fetchSurveyVersions = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/surveys/versions");
-                const data = await res.json();
-                setVersions(Array.isArray(data) ? data : []);
+                const fetchSurveyVersions = async () => {
+                    const data = await apiService.getSurveyVersions();
+                    setSurveyVersionData(data);
+                };
+
+                fetchSurveyVersions();
             } catch (err) {
                 console.error("Error fetching survey versions:", err);
                 setVersions([]);
