@@ -22,9 +22,12 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
         MELicensure: []
     });
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const data = await apiService.getDeptInfo(6);
                 setData(data);
 
@@ -33,6 +36,9 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
             catch (err) {
                 console.error('Error loading ' + departmentName + ' page: ' + err);
             }
+            finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
@@ -40,7 +46,18 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
 
     return (
         <div className="grid grid-cols-9 gap-6 mb-8">
-            <PieChart
+
+            {loading ? (<div className="animate-pulse space-y-6">
+                <div className="grid grid-cols-9 gap-6">
+                    {[...Array(4)]?.map((_, i) => (
+                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                </div>
+            </div>) : (<> <PieChart
                 data={numPerProgram}
                 chartOptions={chartOptions}
                 filterKey="department_id"
@@ -49,105 +66,112 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                 itemLabel="program"
             />
 
-            <div className="col-span-4">
-                <ChartCard
-                    title="Recommendation of Program of Study">
-                    <div className="space-y-3 min-w-full ">
-                        {data.getApproval?.map((item) => {
+                <div className="col-span-4">
+                    <ChartCard
+                        title="Recommendation of Program of Study">
+                        <div className="space-y-3 min-w-full ">
+                            {data.getApproval?.map((item) => {
 
-                            const maxNumAlum = data.getApproval[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-                            return (
-                                <div
-                                    key={item.name}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
+                                const maxNumAlum = data.getApproval[0]?.percentage;
+                                const isTopTied = item.percentage === maxNumAlum;
+                                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                                return (
                                     <div
-                                        className={`flex items-center gap-3 ${highlightClass}`}
+                                        key={item.name}
+                                        className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
                                     >
-                                        <span>{item.name}</span>
+                                        <div
+                                            className={`flex items-center gap-3 ${highlightClass}`}
+                                        >
+                                            <span>{item.name || `No data found`}</span>
+                                        </div>
+
+                                        <span
+                                            className={`flex items-center gap-3 ${highlightClass}`}
+                                        >
+                                            {item.percentage && (
+                                                <>{item.percentage} %</>
+                                            )}
+                                        </span>
                                     </div>
+                                );
+                            })}
+                        </div>
 
-                                    <span
-                                        className={`flex items-center gap-3 ${highlightClass}`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                </ChartCard>
-            </div>
+                    </ChartCard>
+                </div>
 
 
-            <div className="col-span-5">
-                <ChartCard
-                    title="Areas of Mechanical Engineering Where Students Are Seeking Employment">
-                    <div className="space-y-3 min-w-full ">
-                        {data.MEIndustries?.map((item) => {
-                            const maxNumAlum = data.MEIndustries[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-                            return (
-                                <div
-                                    key={item.name}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
+                <div className="col-span-5">
+                    <ChartCard
+                        title="Areas of Mechanical Engineering Where Students Are Seeking Employment">
+                        <div className="space-y-3 min-w-full ">
+                            {data.MEIndustries?.map((item) => {
+                                const maxNumAlum = data.MEIndustries[0]?.percentage;
+                                const isTopTied = item.percentage === maxNumAlum;
+                                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                                return (
                                     <div
-                                        className={`flex items-center gap-3 ${highlightClass}`}
+                                        key={item.name}
+                                        className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
                                     >
-                                        <span>{item.value_text}</span>
+                                        <div
+                                            className={`flex items-center gap-3 ${highlightClass}`}
+                                        >
+                                            <span>{item.value_text || `No data found`}</span>
+                                        </div>
+
+                                        <span
+                                            className={`flex items-center gap-3 ${highlightClass}`}
+                                        >
+                                            {item.percentage && (
+                                                <>{item.percentage} %</>
+                                            )}
+                                        </span>
                                     </div>
+                                );
+                            })}
+                        </div>
 
-                                    <span
-                                        className={`flex items-center gap-3 ${highlightClass}`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    </ChartCard>
+                </div >
 
-                </ChartCard>
-            </div >
-
-            <div className="col-span-9">
-                <ChartCard
-                    title="Student Confidence in Pursuing Licensure Post-Graduation">
-                    <div className="space-y-3 min-w-full ">
-                        {data.MELicensure?.map((item) => {
-                            const maxNumAlum = data.MELicensure[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                <div className="col-span-9">
+                    <ChartCard
+                        title="Student Confidence in Pursuing Licensure Post-Graduation">
+                        <div className="space-y-3 min-w-full ">
+                            {data.MELicensure?.map((item) => {
+                                const maxNumAlum = data.MELicensure[0]?.percentage;
+                                const isTopTied = item.percentage === maxNumAlum;
+                                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
 
 
-                            return (
-                                <div
-                                    key={item.name}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
+                                return (
                                     <div
-                                        className={`flex items-center gap-3 ${highlightClass}`}
+                                        key={item.name}
+                                        className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
                                     >
-                                        <span>{item.value_text}</span>
+                                        <div
+                                            className={`flex items-center gap-3 ${highlightClass}`}
+                                        >
+                                            <span>{item.value_text || `No data found`}</span>
+                                        </div>
+
+                                        <span
+                                            className={`flex items-center gap-3 text-nowrap pl-15 ${highlightClass}`}
+                                        >
+                                            {item.percentage && (
+                                                <>{item.percentage} %</>
+                                            )}
+                                        </span>
                                     </div>
+                                );
+                            })}
+                        </div>
 
-                                    <span
-                                        className={`flex items-center gap-3 text-nowrap pl-15 ${highlightClass}`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    </ChartCard>
+                </div ></>)}
 
-                </ChartCard>
-            </div >
         </div >
     )
 };

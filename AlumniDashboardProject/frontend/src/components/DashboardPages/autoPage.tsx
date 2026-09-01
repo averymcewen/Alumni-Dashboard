@@ -101,8 +101,9 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
 
         <div className="grid grid-cols-9 gap-6 mb-8">
 
+
             {loading ? (<div className="animate-pulse space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-9 gap-6">
                     {[...Array(4)]?.map((_, i) => (
                         <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
                     ))}
@@ -138,7 +139,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                                                     : ''
                                                     }`}
                                             >
-                                                <span>{item.name}</span>
+                                                <span>{item.name || `No data found`}</span>
                                             </div>
 
                                             <span
@@ -147,7 +148,9 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                                                     : ''
                                                     }`}
                                             >
-                                                {item.percentage} %
+                                                {item.percentage && (
+                                                    <>{item.percentage} %</>
+                                                )}
                                             </span>
                                         </div>
                                     );
@@ -174,7 +177,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                                                     : ''
                                                     }`}
                                             >
-                                                <span>{item.value_text}</span>
+                                                <span>{item.value_text || `No data found`}</span>
                                             </div>
 
                                             <span
@@ -183,7 +186,9 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                                                     : ''
                                                     }`}
                                             >
-                                                {item.percentage} %
+                                                {item.percentage && (
+                                                    <span>{item.percentage} %</span>
+                                                )}
                                             </span>
                                         </div>
                                     );

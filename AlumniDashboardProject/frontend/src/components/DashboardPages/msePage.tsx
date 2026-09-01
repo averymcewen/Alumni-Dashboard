@@ -28,6 +28,8 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
     });
 
+    const [loading, setLoading] = useState(false);
+
     const pieOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -47,6 +49,7 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const data = await apiService.getDeptInfo(5);
                 setData(data);
 
@@ -54,6 +57,9 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
             }
             catch (err) {
                 console.error('Error loading ' + departmentName + ' page: ' + err);
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -133,7 +139,18 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
     return (
         <div className="grid grid-cols-9 gap-6 mb-8">
-            <PieChart
+
+            {loading ? (<div className="animate-pulse space-y-6">
+                <div className="grid grid-cols-9 gap-6">
+                    {[...Array(4)]?.map((_, i) => (
+                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                </div>
+            </div>) : (<>  <PieChart
                 data={numPerProgram}
                 chartOptions={chartOptions}
                 filterKey="department_id"
@@ -143,80 +160,83 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
             />
 
 
-            <div className="col-span-3">
-                <ChartCard
-                    title="Recommendation of Program of Study">
-                    <div className="space-y-3 min-w-full ">
-                        {data.getApproval?.map((item) => {
-                            return (
-                                <div
-                                    key={item.name}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
+                <div className="col-span-3">
+                    <ChartCard
+                        title="Recommendation of Program of Study">
+                        <div className="space-y-3 min-w-full ">
+                            {data.getApproval?.map((item) => {
+                                return (
                                     <div
-                                        className={`flex items-center gap-3 ${data.getApproval[0]?.name === item.name
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
+                                        key={item.name}
+                                        className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
                                     >
-                                        <span>{item.name}</span>
+                                        <div
+                                            className={`flex items-center gap-3 ${data.getApproval[0]?.name === item.name
+                                                ? 'font-bold text-lg'
+                                                : ''
+                                                }`}
+                                        >
+                                            <span>{item.name || `No data found`}</span>
+                                        </div>
+
+                                        <span
+                                            className={`flex items-center gap-3 ${data.getApproval[0]?.percentage === item.percentage
+                                                ? 'font-bold text-lg'
+                                                : ''
+                                                }`}
+                                        >
+                                            {item.percentage && (
+                                                <>{item.percentage} %</>
+                                            )}
+                                        </span>
                                     </div>
+                                );
+                            })}
+                        </div>
 
-                                    <span
-                                        className={`flex items-center gap-3 ${data.getApproval[0]?.percentage === item.percentage
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                </ChartCard>
-            </div>
+                    </ChartCard>
+                </div>
 
 
 
 
-            <div className="col-span-6">
-                <ChartCard title="Influential Factors in Choosing MSE">
-                    <div className="relative w-full h-80">
-                        <Bar
-                            data={MSEFactorsBarData}
-                            options={barChartOptions} />
-                    </div>
-                </ChartCard>
-            </div>
+                <div className="col-span-6">
+                    <ChartCard title="Influential Factors in Choosing MSE">
+                        <div className="relative w-full h-80">
+                            <Bar
+                                data={MSEFactorsBarData}
+                                options={barChartOptions} />
+                        </div>
+                    </ChartCard>
+                </div>
 
 
-            <div className="col-span-9">
-                <ChartCard
-                    title=""
-                    contentClassName="w-full"
-                >
-                    <div className="text-left w-full min-h-50">
-                        <table className="w-full table-fixed">
-                            <thead>
-                                <tr>
-                                    <th className="font-semibold text-lg text-gray-900 text-left py-3 w-full">
-                                        Effectiveness of Lab Tools
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.MSETools?.map((item) => (
-                                    <tr key={item.value_text} className="border-b border-gray-300 drop-shadow-sm">
-                                        <td className="px-6 py-3 w-full">{item.value_text}</td>
+                <div className="col-span-9">
+                    <ChartCard
+                        title=""
+                        contentClassName="w-full"
+                    >
+                        <div className="text-left w-full min-h-50">
+                            <table className="w-full table-fixed">
+                                <thead>
+                                    <tr>
+                                        <th className="font-semibold text-lg text-gray-900 text-left py-3 w-full">
+                                            Effectiveness of Lab Tools
+                                        </th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </ChartCard>
-            </div>
+                                </thead>
+                                <tbody>
+                                    {data.MSETools?.map((item) => (
+                                        <tr key={item.value_text} className="border-b border-gray-300 drop-shadow-sm">
+                                            <td className="px-6 py-3 w-full">{item.value_text}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </ChartCard>
+                </div>
+            </>)}
 
         </div>
     )
