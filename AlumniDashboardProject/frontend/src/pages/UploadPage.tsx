@@ -107,7 +107,7 @@ function UploadPage() {
             setResponsesSuccess("Responses uploaded successfully.");
             setResponsesFile(null);
         } catch (error) {
-            console.error("Response upload error:", error);
+            console.error("Response upload e%rror:", error);
             setResponsesError(
                 "Something went wrong while uploading the responses file. Please try again."
             );
@@ -134,8 +134,7 @@ function UploadPage() {
 
             const response = await apiService.submitSurveyVersion(surveyVersionData);
 
-
-            setSurveyVersionSuccess("Survey version submitted successfully.");
+            setSurveyVersionSuccess("Survey version submitted successfully.")
 
 
             setIsOpen(false);
@@ -322,7 +321,7 @@ function UploadPage() {
                                                 key={v.survey_version_id}
                                                 value={String(v.survey_version_id)}
                                             >
-                                                {v.survey_name} - {v.version_name}
+                                                {v.surveyName} - {v.version}
                                             </option>
                                         ))
                                     ) : (
