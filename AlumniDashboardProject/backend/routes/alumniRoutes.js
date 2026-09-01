@@ -1,7 +1,323 @@
 import express from "express";
 import pool from "../db/pool.js";
+import { findEmployer } from "../services/helpers.js";
 
 const router = express.Router();
+
+
+/**
+ * Looks up a department by name, creating it if it doesn't exist yet.
+ * Used so admins can type a department name freely in the edit form
+ * without needing to know its internal ID.
+ */
+async function findOrCreateDepartment(connection, departmentName) {
+    if (!departmentName?.trim()) return null;
+
+    const name = departmentName.trim();
+
+    const [rows] = await connection.query(
+        `SELECT department_id FROM department WHERE department_name = ?`,
+        [name]
+    );
+
+    if (rows.length) return rows[0].department_id;
+
+    const [result] = await connection.query(
+        `INSERT INTO department (department_name) VALUES (?)`,
+        [name]
+    );
+
+    return result.insertId;
+}
+
+/**
+ * Same idea as findOrCreateDepartment, but for program_of_study.
+ * Creates the department first if needed, then the program.
+ */
+async function findOrCreateProgram(connection, programName, departmentName) {
+    if (!programName?.trim()) return null;
+
+    const name = programName.trim();
+
+    const [rows] = await connection.query(
+        `SELECT program_id FROM program_of_study WHERE program_name = ?`,
+        [name]
+    );
+
+    if (rows.length) return rows[0].program_id;
+
+    const departmentId = await findOrCreateDepartment(connection, departmentName);
+
+    const [result] = await connection.query(
+        `INSERT INTO program_of_study (program_name, department_id) VALUES (?, ?)`,
+        [name, departmentId]
+    );
+
+    return result.insertId;
+}
+
+/**
+ * Handles inserting/updating/deleting an alumni's degrees, employment,
+ * and internship records, given the full arrays from the edit form.
+ * Items with an existing *_id are updated; items without one are new
+ * and get inserted. Shared by both the create and update routes below.
+ *
+ * NOTE: your employment/internship tables also have a survey_attempt_id
+ * column (used when this data comes from a CSV import). Manually-added
+ * records from this admin form aren't tied to a survey attempt, so this
+ * assumes that column is nullable. If it's NOT NULL in your live schema,
+ * you'll need to relax that constraint for manual entries to save.
+ */
+async function saveAlumniSubRecords(connection, alumniId, payload) {
+    const {
+        degrees = [],
+        employment = [],
+        internships = [],
+        deletedDegreeIds = [],
+        deletedEmploymentIds = [],
+        deletedInternshipIds = [],
+    } = payload;
+
+    for (const degreeId of deletedDegreeIds) {
+        await connection.query(
+            `DELETE FROM alumni_degrees WHERE alumni_degree_id = ? AND alumni_id = ?`,
+            [degreeId, alumniId]
+        );
+    }
+
+    for (const employmentId of deletedEmploymentIds) {
+        await connection.query(
+            `DELETE FROM employment WHERE employment_id = ? AND alumni_id = ?`,
+            [employmentId, alumniId]
+        );
+    }
+
+    for (const internshipId of deletedInternshipIds) {
+        await connection.query(
+            `DELETE FROM internship WHERE internship_id = ? AND alumni_id = ?`,
+            [internshipId, alumniId]
+        );
+    }
+
+    for (const degree of degrees) {
+        const programId = await findOrCreateProgram(
+            connection,
+            degree.program_name,
+            degree.department_name
+        );
+
+        if (degree.alumni_degree_id) {
+            await connection.query(
+                `UPDATE alumni_degrees
+                 SET degree_type = ?, program_id = ?, survey_term = ?, survey_year = ?, minor = ?, gpa = ?
+                 WHERE alumni_degree_id = ? AND alumni_id = ?`,
+                [
+                    degree.degree_type || null,
+                    programId,
+                    degree.survey_term || null,
+                    degree.survey_year || null,
+                    degree.minor || null,
+                    degree.gpa || null,
+                    degree.alumni_degree_id,
+                    alumniId,
+                ]
+            );
+        } else {
+            await connection.query(
+                `INSERT INTO alumni_degrees (alumni_id, degree_type, program_id, survey_term, survey_year, minor, gpa)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    alumniId,
+                    degree.degree_type || null,
+                    programId,
+                    degree.survey_term || null,
+                    degree.survey_year || null,
+                    degree.minor || null,
+                    degree.gpa || null,
+                ]
+            );
+        }
+    }
+
+    for (const job of employment) {
+        const { employerId, altEmployerName } = await findEmployer(connection, job.employer_name);
+
+        if (job.employment_id) {
+            await connection.query(
+                `UPDATE employment
+                 SET employer_id = ?, alt_employer_name = ?, job_position = ?, salary = ?,
+                     city = ?, state = ?, country = ?, yrs_exp = ?, is_current = ?
+                 WHERE employment_id = ? AND alumni_id = ?`,
+                [
+                    employerId,
+                    altEmployerName,
+                    job.job_position || null,
+                    job.salary || null,
+                    job.city || null,
+                    job.state || null,
+                    job.country || null,
+                    job.yrs_exp || null,
+                    job.is_current ? 1 : 0,
+                    job.employment_id,
+                    alumniId,
+                ]
+            );
+        } else {
+            await connection.query(
+                `INSERT INTO employment
+                 (alumni_id, employer_id, alt_employer_name, job_position, salary, city, state, country, yrs_exp, is_current)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    alumniId,
+                    employerId,
+                    altEmployerName,
+                    job.job_position || null,
+                    job.salary || null,
+                    job.city || null,
+                    job.state || null,
+                    job.country || null,
+                    job.yrs_exp || null,
+                    job.is_current ? 1 : 0,
+                ]
+            );
+        }
+    }
+
+    for (const internship of internships) {
+        if (internship.internship_id) {
+            await connection.query(
+                `UPDATE internship
+                 SET intern_business = ?, intern_city = ?, for_credit = ?, not_for_credit = ?, n_a = ?, start_date = ?, end_date = ?
+                 WHERE internship_id = ? AND alumni_id = ?`,
+                [
+                    internship.intern_business || null,
+                    internship.intern_city || null,
+                    internship.for_credit ? 1 : 0,
+                    internship.not_for_credit ? 1 : 0,
+                    internship.n_a ? 1 : 0,
+                    internship.start_date || null,
+                    internship.end_date || null,
+                    internship.internship_id,
+                    alumniId,
+                ]
+            );
+        } else {
+            await connection.query(
+                `INSERT INTO internship
+                 (alumni_id, intern_business, intern_city, for_credit, not_for_credit, n_a, start_date, end_date)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    alumniId,
+                    internship.intern_business || null,
+                    internship.intern_city || null,
+                    internship.for_credit ? 1 : 0,
+                    internship.not_for_credit ? 1 : 0,
+                    internship.n_a ? 1 : 0,
+                    internship.start_date || null,
+                    internship.end_date || null,
+                ]
+            );
+        }
+    }
+}
+
+/**
+ * Update an existing alumni's demographic info and all sub-records in
+ * one call. Everything happens in a single transaction -- if anything
+ * fails, nothing is saved, keeping the record consistent.
+ */
+router.put("/:id", async (req, res) => {
+    const alumniId = req.params.id;
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const { first_name, last_name, email, phone, wildcat_id, graduation_date } = req.body;
+
+        if (!email?.trim()) {
+            throw new Error("Email is required.");
+        }
+
+        const [result] = await connection.query(
+            `UPDATE alumni
+             SET first_name = ?, last_name = ?, email = ?, phone = ?, wildcat_id = ?, graduation_date = ?
+             WHERE alumni_id = ?`,
+            [
+                first_name || null,
+                last_name || null,
+                email.trim(),
+                phone || null,
+                wildcat_id || null,
+                graduation_date || null,
+                alumniId,
+            ]
+        );
+
+        if (result.affectedRows === 0) {
+            throw new Error("Alumni not found.");
+        }
+
+        await saveAlumniSubRecords(connection, alumniId, req.body);
+
+        await connection.commit();
+
+        res.json({ success: true, alumni_id: Number(alumniId) });
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error updating alumni record:", error);
+        res.status(400).json({ error: error.message });
+    } finally {
+        connection.release();
+    }
+});
+
+/**
+ * Create a brand new alumni record, plus any degrees/employment/
+ * internships submitted alongside it.
+ */
+router.post("/", async (req, res) => {
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const { first_name, last_name, email, phone, wildcat_id, graduation_date } = req.body;
+
+        if (!email?.trim()) {
+            throw new Error("Email is required to create a new alumni record.");
+        }
+
+        const [result] = await connection.query(
+            `INSERT INTO alumni (first_name, last_name, email, phone, wildcat_id, graduation_date)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                first_name || null,
+                last_name || null,
+                email.trim(),
+                phone || null,
+                wildcat_id || null,
+                graduation_date || null,
+            ]
+        );
+
+        const alumniId = result.insertId;
+
+        await saveAlumniSubRecords(connection, alumniId, req.body);
+
+        await connection.commit();
+
+        res.json({ success: true, alumni_id: alumniId });
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error creating alumni record:", error);
+        res.status(400).json({ error: error.message });
+    } finally {
+        connection.release();
+    }
+});
+
+
 
 router.get("/", async (req, res) => {
     try {

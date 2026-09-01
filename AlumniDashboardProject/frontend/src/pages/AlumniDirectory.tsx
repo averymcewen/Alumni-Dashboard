@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Download, User } from 'lucide-react';
+import { Search, Filter, Download, User, Plus } from 'lucide-react';
 import { Alumni } from '../types/alumni';
 import PageHeader from '../components/PageHeader';
 import DataTable from '../components/DataTable';
@@ -193,6 +193,11 @@ const AlumniDirectory: React.FC = () => {
         <button className="btn btn-primary flex items-center gap-2">
           <Download size={16} />
           <span>Export Data</span>
+        </button>
+
+        <button className="btn btn-primary flex items-center gap-2" onClick={() => navigate('/alumni/new/edit')}>
+          <Plus size={16} />
+          <span>Add New Alumni</span>
         </button>
       </PageHeader>
 

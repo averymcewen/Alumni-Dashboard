@@ -37,6 +37,16 @@ export const apiService = {
         return res.data;
     },
 
+    updateAlumniRecord: async (id, data) => {
+        const res = await API.put(`/alumni/${id}`, data);
+        return res.data;
+    },
+
+    createAlumniRecord: async (data) => {
+        const res = await API.post(`/alumni`, data);
+        return res.data;
+    },
+
     getDashboardStats: async () => {
         const response = await API.get("/display/dashboardStats");
         return response.data;
