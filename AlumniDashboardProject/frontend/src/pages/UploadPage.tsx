@@ -6,14 +6,15 @@ function UploadPage() {
     const [versions, setVersions] = useState<any[]>([]);
     const [questionsFile, setQuestionsFile] = useState<File | null>(null);
     const [responsesFile, setResponsesFile] = useState<File | null>(null);
-    const [surveyVersionId, setSurveyVersionId] = useState("");
+    const [survey_version_id, setsurvey_version_id] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [fromAdminPage, setFromAdminPage] = useState(true);
 
     const [surveyVersionData, setSurveyVersionData] = useState({
-        surveyName: "",
-        version: "",
-        surveyDate: ""
+        survey_version_id: "",
+        survey_name: "",
+        version_name: "",
+        term_label: ""
     });
 
 
@@ -43,13 +44,13 @@ function UploadPage() {
         fetchSurveyVersions();
     }, [submittingSurveyVersion]);
 
-    const hasValidSurveyVersion = surveyVersionId !== "";
+    const hasValidSurveyVersion = survey_version_id !== "";
 
 
     const canUploadResponses =
         !!responsesFile && hasValidSurveyVersion && !uploadingResponses;
 
-    const responsesValidationMessage = !surveyVersionId
+    const responsesValidationMessage = !survey_version_id
         ? "Please select a survey version."
         : !responsesFile
             ? "Please choose a responses CSV file."
@@ -82,14 +83,14 @@ function UploadPage() {
             return;
         }
 
-        if (!surveyVersionId) {
+        if (!survey_version_id) {
             setResponsesError("Please choose a survey version first.");
             return;
         }
 
         const formData = new FormData();
         formData.append("file", responsesFile);
-        formData.append("surveyVersionId", surveyVersionId);
+        formData.append("survey_version_id", survey_version_id);
 
         try {
             setUploadingResponses(true);
@@ -114,9 +115,9 @@ function UploadPage() {
         setSurveyVersionError("");
         setSurveyVersionSuccess("");
 
-        const { surveyName, version, surveyDate } = surveyVersionData;
+        const { survey_name, version_name, term_label } = surveyVersionData;
 
-        if (!surveyName.trim() || !version.trim() || !surveyDate.trim()) {
+        if (!survey_name.trim() || !version_name.trim() || !term_label.trim()) {
             setSurveyVersionError("Please fill out all survey version fields.");
             return;
         }
@@ -187,8 +188,8 @@ function UploadPage() {
                                         <input
                                             className="border-solid border-black border-1 rounded-md"
                                             type="text"
-                                            name="surveyName"
-                                            value={surveyVersionData.surveyName}
+                                            name="survey_name"
+                                            value={surveyVersionData.survey_name}
                                             onChange={handleSurveyVersionInputChange}
                                         />
                                     </div>
@@ -199,7 +200,7 @@ function UploadPage() {
                                             className="border-solid border-black border-1 rounded-md"
                                             type="text"
                                             name="version"
-                                            value={surveyVersionData.version}
+                                            value={surveyVersionData.version_name}
                                             onChange={handleSurveyVersionInputChange}
                                         />
                                     </div>
@@ -209,8 +210,8 @@ function UploadPage() {
                                         <input
                                             className="border-solid border-black border-1 rounded-md"
                                             type="text"
-                                            name="surveyDate"
-                                            value={surveyVersionData.surveyDate}
+                                            name="term_label"
+                                            value={surveyVersionData.term_label}
                                             onChange={handleSurveyVersionInputChange}
                                         />
                                     </div>
@@ -295,15 +296,15 @@ function UploadPage() {
                             <div className="form-field-container md:flex-row flex-col">
                                 <label className="text-xl">Survey Version: </label>
                                 <select
-                                    value={surveyVersionId}
+                                    value={survey_version_id}
                                     onChange={(e) => {
-                                        setSurveyVersionId(e.target.value);
+                                        setsurvey_version_id(e.target.value);
                                         setQuestionsError("");
                                         setResponsesError("");
                                         setQuestionsSuccess("");
                                         setResponsesSuccess("");
                                     }}
-                                    className={`border rounded-md px-2 py-1 ${!surveyVersionId ? "border-red-500" : "border-gray-300"
+                                    className={`border rounded-md px-2 py-1 ${!survey_version_id ? "border-red-500" : "border-gray-300"
                                         }`}
                                 >
                                     <option value="">Select a survey</option>
@@ -313,7 +314,7 @@ function UploadPage() {
                                                 key={v.survey_version_id}
                                                 value={String(v.survey_version_id)}
                                             >
-                                                {v.surveyName} - {v.version}
+                                                {v.survey_name} - {v.version}
                                             </option>
                                         ))
                                     ) : (
@@ -321,7 +322,7 @@ function UploadPage() {
                                     )}
                                 </select>
 
-                                {!surveyVersionId && (
+                                {!survey_version_id && (
                                     <p className="text-amber-600 mt-2 text-sm">
                                         A survey version must be selected before uploading files.
                                     </p>
