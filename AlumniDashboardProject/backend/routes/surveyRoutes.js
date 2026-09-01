@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/versions", async (req, res) => {
     try {
         const [rows] = await pool.query(
-            `SELECT sv.version_name AS version, sv.term_label AS surveyDate, s.survey_name as surveyName
+            `SELECT sv.version_name AS version, sv.term_label AS surveyDate, s.survey_name as surveyName, sv.survey_version_id AS surveyVersionId
        FROM survey_version sv
        JOIN survey s ON sv.survey_id = s.survey_id
        ORDER BY sv.created_at DESC`

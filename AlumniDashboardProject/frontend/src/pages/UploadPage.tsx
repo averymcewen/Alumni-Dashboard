@@ -45,17 +45,9 @@ function UploadPage() {
 
     const hasValidSurveyVersion = surveyVersionId !== "";
 
-    const canUploadQuestions =
-        !!questionsFile && hasValidSurveyVersion && !uploadingQuestions;
 
     const canUploadResponses =
         !!responsesFile && hasValidSurveyVersion && !uploadingResponses;
-
-    const questionsValidationMessage = !surveyVersionId
-        ? "Please select a survey version."
-        : !questionsFile
-            ? "Please choose a survey questions CSV file."
-            : "";
 
     const responsesValidationMessage = !surveyVersionId
         ? "Please select a survey version."
@@ -107,7 +99,7 @@ function UploadPage() {
             setResponsesSuccess("Responses uploaded successfully.");
             setResponsesFile(null);
         } catch (error) {
-            console.error("Response upload e%rror:", error);
+            console.error("Response upload error:", error);
             setResponsesError(
                 "Something went wrong while uploading the responses file. Please try again."
             );
