@@ -28,6 +28,8 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
 
     });
 
+    const [loading, setLoading] = useState(false);
+
     const pieOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -47,6 +49,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const data = await apiService.getDeptInfo(2);
                 setData(data);
 
@@ -54,6 +57,9 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
             }
             catch (err) {
                 console.error('Error loading ' + departmentName + ' page: ' + err);
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -91,118 +97,135 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
     }, [AUTOIndustry]);
 
     return (
+
+
         <div className="grid grid-cols-9 gap-6 mb-8">
-            <PieChart
-                data={numPerProgram}
-                chartOptions={chartOptions}
-                filterKey="department_id"
-                filterValue={department_id || 2}
-                title={`Recent Grads Per Program: ${departmentName}`}
-                itemLabel="program"
-            />
 
-            <div className="col-span-3">
-                <ChartCard
-                    title="Recommendation of Program of Study">
-                    <div className="space-y-3 min-w-full ">
-                        {data.getApproval?.map((item) => {
-                            return (
-                                <div
-                                    key={item.name}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
-                                    <div
-                                        className={`flex items-center gap-3 ${data.getApproval[0]?.name === item.name
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
-                                    >
-                                        <span>{item.name}</span>
-                                    </div>
+            {loading ? (<div className="animate-pulse space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[...Array(4)]?.map((_, i) => (
+                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                </div>
+            </div>) : (
+                <>
+                    <PieChart
+                        data={numPerProgram}
+                        chartOptions={chartOptions}
+                        filterKey="department_id"
+                        filterValue={department_id || 2}
+                        title={`Recent Grads Per Program: ${departmentName}`}
+                        itemLabel="program"
+                    />
 
-                                    <span
-                                        className={`flex items-center gap-3 ${data.getApproval[0]?.percentage === item.percentage
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    <div className="col-span-3">
+                        <ChartCard
+                            title="Recommendation of Program of Study">
+                            <div className="space-y-3 min-w-full ">
+                                {data.getApproval?.map((item) => {
+                                    return (
+                                        <div
+                                            key={item.name}
+                                            className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                        >
+                                            <div
+                                                className={`flex items-center gap-3 ${data.getApproval[0]?.name === item.name
+                                                    ? 'font-bold text-lg'
+                                                    : ''
+                                                    }`}
+                                            >
+                                                <span>{item.name}</span>
+                                            </div>
 
-                </ChartCard>
-            </div>
-
-
-            <div className="col-span-6">
-                <ChartCard
-                    title="Student Confidence in Pursuing Certification Post-Graduation">
-                    <div className="space-y-3 min-w-full ">
-                        {data.AUTOCert?.map((item) => {
-                            return (
-                                <div
-                                    key={item.value_text}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
-                                    <div
-                                        className={`flex items-center gap-3 ${data.AUTOCert[0]?.value_text === item.value_text
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
-                                    >
-                                        <span>{item.value_text}</span>
-                                    </div>
-
-                                    <span
-                                        className={`flex items-center gap-3 ${data.AUTOCert[0]?.percentage === item.percentage && data.AUTOCert[0]?.value_text === item.value_text
-                                            ? 'font-bold text-lg'
-                                            : ''
-                                            }`}
-                                    >
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                </ChartCard>
-            </div>
-
-
-            <div className="col-span-9">
-
-                <ChartCard
-                    title="Areas of Automotive Industry Where Students Are Seeking Employment"
-                >
-                    <div className="space-y-3 min-w-full h-full self-start">
-
-                        <div className="flex items-center gap-8">
-                            <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
-                                {AUTOIndustry.labels?.map((labelHours: string, idx: number) => (
-                                    <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
-                                        <span
-                                            className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                                            style={{ backgroundColor: colors[idx % colors?.length] }}
-                                        />
-                                        <span>{labelHours}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="relative h-80 flex-1">
-                                <Pie
-                                    options={pieOptions}
-                                    data={coloredPieChart}
-                                />
+                                            <span
+                                                className={`flex items-center gap-3 ${data.getApproval[0]?.percentage === item.percentage
+                                                    ? 'font-bold text-lg'
+                                                    : ''
+                                                    }`}
+                                            >
+                                                {item.percentage} %
+                                            </span>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        </div>
+
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
+
+
+                    <div className="col-span-6">
+                        <ChartCard
+                            title="Student Confidence in Pursuing Certification Post-Graduation">
+                            <div className="space-y-3 min-w-full ">
+                                {data.AUTOCert?.map((item) => {
+                                    return (
+                                        <div
+                                            key={item.value_text}
+                                            className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                        >
+                                            <div
+                                                className={`flex items-center gap-3 ${data.AUTOCert[0]?.value_text === item.value_text
+                                                    ? 'font-bold text-lg'
+                                                    : ''
+                                                    }`}
+                                            >
+                                                <span>{item.value_text}</span>
+                                            </div>
+
+                                            <span
+                                                className={`flex items-center gap-3 ${data.AUTOCert[0]?.percentage === item.percentage && data.AUTOCert[0]?.value_text === item.value_text
+                                                    ? 'font-bold text-lg'
+                                                    : ''
+                                                    }`}
+                                            >
+                                                {item.percentage} %
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                        </ChartCard>
+                    </div>
+
+
+                    <div className="col-span-9">
+
+                        <ChartCard
+                            title="Areas of Automotive Industry Where Students Are Seeking Employment"
+                        >
+                            <div className="space-y-3 min-w-full h-full self-start">
+
+                                <div className="flex items-center gap-8">
+                                    <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
+                                        {AUTOIndustry.labels?.map((labelHours: string, idx: number) => (
+                                            <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
+                                                <span
+                                                    className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
+                                                    style={{ backgroundColor: colors[idx % colors?.length] }}
+                                                />
+                                                <span>{labelHours}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className="relative h-80 flex-1">
+                                        <Pie
+                                            options={pieOptions}
+                                            data={coloredPieChart}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </ChartCard>
+                    </div></>
+            )}
+
         </div>
     )
 };
