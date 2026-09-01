@@ -32,12 +32,8 @@ function UploadPage() {
     useEffect(() => {
         const fetchSurveyVersions = async () => {
             try {
-                const fetchSurveyVersions = async () => {
-                    const data = await apiService.getSurveyVersions();
-                    setSurveyVersionData(data);
-                };
-
-                fetchSurveyVersions();
+                const data = await apiService.getSurveyVersions();
+                setVersions(Array.isArray(data) ? data : []);
             } catch (err) {
                 console.error("Error fetching survey versions:", err);
                 setVersions([]);
@@ -45,7 +41,7 @@ function UploadPage() {
         };
 
         fetchSurveyVersions();
-    }, []);
+    }, [submittingSurveyVersion]);
 
     const hasValidSurveyVersion = surveyVersionId !== "";
 
@@ -81,58 +77,7 @@ function UploadPage() {
         setSurveyVersionSuccess("");
     };
 
-    const handleUploadQuestions = async (e: React.FormEvent) => {
-        e.preventDefault();
 
-        setQuestionsError("");
-        setQuestionsSuccess("");
-
-        if (!questionsFile) {
-            setQuestionsError("Please choose a survey questions CSV file first.");
-            return;
-        }
-
-        if (!surveyVersionId) {
-            setQuestionsError("Please choose a survey version first.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("file", questionsFile);
-        formData.append("surveyVersionId", surveyVersionId);
-        formData.append("fromAdminPage", "false");
-
-        try {
-            setUploadingQuestions(true);
-
-            const response = await fetch(
-                "http://localhost:5000/api/import/upload-questions",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                setQuestionsError(
-                    result.error || "Upload failed with an unknown error."
-                );
-                return;
-            }
-
-            setQuestionsSuccess("Survey questions uploaded successfully.");
-            setQuestionsFile(null);
-        } catch (error) {
-            console.error("Question upload error:", error);
-            setQuestionsError(
-                "Something went wrong while uploading the questions file. Please try again."
-            );
-        } finally {
-            setUploadingQuestions(false);
-        }
-    };
 
     const handleUploadResponses = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -157,22 +102,7 @@ function UploadPage() {
         try {
             setUploadingResponses(true);
 
-            const response = await fetch(
-                "http://localhost:5000/api/import/upload-responses",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                setResponsesError(
-                    result.error || "Upload failed with an unknown error."
-                );
-                return;
-            }
+            const data = await apiService.uploadResponseData(formData);
 
             setResponsesSuccess("Responses uploaded successfully.");
             setResponsesFile(null);
@@ -202,42 +132,11 @@ function UploadPage() {
         try {
             setSubmittingSurveyVersion(true);
 
-            const response = await fetch(
-                "http://localhost:5000/api/surveys/submit-survey-version",
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        surveyName: surveyName.trim(),
-                        version: version.trim(),
-                        surveyDate: surveyDate.trim()
-                    }),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
+            const response = await apiService.submitSurveyVersion(surveyVersionData);
 
-            const result = await response.json();
-
-            if (!response.ok) {
-                setSurveyVersionError(
-                    result.error || "Failed to submit survey version."
-                );
-                return;
-            }
 
             setSurveyVersionSuccess("Survey version submitted successfully.");
 
-            const refreshed = await fetch("http://localhost:5000/api/surveys/versions");
-            const refreshedData = await refreshed.json();
-            const safeVersions = Array.isArray(refreshedData) ? refreshedData : [];
-            setVersions(safeVersions);
-
-            setSurveyVersionData({
-                surveyName: "",
-                version: "",
-                surveyDate: ""
-            });
 
             setIsOpen(false);
         } catch (error) {

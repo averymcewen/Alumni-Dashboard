@@ -8,9 +8,6 @@ import { apiService } from '../../services/api';
 
 import { OverviewElements, AUTOPage, CBSPage, ECEPage, MEPage, MSEPage, PSPage, SOCPage, EastInsights, GradPrograms } from './export';
 
-import DynamicDataTable from '../components/DynamicDataTable';
-import { Fullscreen } from 'lucide-react';
-
 // Register ChartJS components
 ChartJS.register(ArcElement, LineElement, BarElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 ChartJS.register(Filler);

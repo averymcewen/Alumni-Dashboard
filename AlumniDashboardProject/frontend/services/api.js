@@ -27,6 +27,16 @@ export const apiService = {
         return response.data;
     },
 
+    submitSurveyVersion: async (data) => {
+        const res = await API.post("/surveys/submit-survey-version", data);
+        return res.data;
+    },
+
+    uploadResponseData: async (data) => {
+        const res = await API.post("/import/upload-responses", data);
+        return res.data;
+    },
+
     getDashboardStats: async () => {
         const response = await API.get("/display/dashboardStats");
         return response.data;
