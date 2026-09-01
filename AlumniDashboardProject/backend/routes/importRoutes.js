@@ -10,7 +10,7 @@ const uploadResponses = multer({ dest: "response-uploads/" });
 
 router.post("/upload-responses", uploadResponses.single("file"), async (req, res) => {
     try {
-        const surveyVersionId = Number(req.body.surveyVersionId);
+        const surveyVersionId = Number(req.body.survey_version_id);
 
         if (!surveyVersionId) {
             return res.status(400).json({ error: "surveyVersionId is required" });

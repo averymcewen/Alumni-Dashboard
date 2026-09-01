@@ -314,7 +314,7 @@ function UploadPage() {
                                                 key={v.survey_version_id}
                                                 value={String(v.survey_version_id)}
                                             >
-                                                {v.survey_name} - {v.version}
+                                                {v.survey_name} - {v.version_name}
                                             </option>
                                         ))
                                     ) : (
