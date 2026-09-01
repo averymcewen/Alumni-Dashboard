@@ -30,7 +30,7 @@ export async function getOptionText(connection, questionId, optionCode) {
         [questionId, optionCode]
     );
 
-    if (!rows.length) {
+    if (!rows?.length) {
         return optionCode;
     }
 
@@ -65,7 +65,7 @@ export async function ensureQuestionExists(
             [surveyVersionId, questionCode]
         );
 
-        if (rows.length > 0) {
+        if (rows?.length > 0) {
             const questionId = rows[0].question_id;
 
             if (questionText && rows[0].question_text !== questionText) {
@@ -140,7 +140,7 @@ export async function ensureOptionExists(connection, questionId, optionCode, opt
             [questionId, optionCode]
         );
 
-        if (rows.length > 0) {
+        if (rows?.length > 0) {
             const optionId = rows[0].option_id;
 
             if (optionText && rows[0].option_text !== optionText) {
@@ -277,7 +277,7 @@ export async function ensureMappingsForCsvHeaders(connection, surveyVersionId, h
                 AND survey_version_id = ?`,
                 [mapping.raw_column_name, surveyVersionId]);
 
-            if (existingQuestion.length > 0) {
+            if (existingQuestion?.length > 0) {
                 console.log("Duplicate key detected for: " + mapping.quesion_code + " " + mapping.question_text + " Conflicts with: " + existingQuestion.question_code + existingQuestion.question_text)
             }
 
@@ -313,7 +313,7 @@ export async function getQuestionId(connection, surveyVersionId, questionCode) {
         [surveyVersionId, questionCode]
     );
 
-    if (!rows.length) {
+    if (!rows?.length) {
         throw new Error(`Question not found for code: ${questionCode}`);
     }
 
@@ -328,7 +328,7 @@ export async function getOptionId(connection, questionId, optionCode) {
         [questionId, optionCode]
     );
 
-    if (!rows.length) {
+    if (!rows?.length) {
         throw new Error(`Option not found for code: ${optionCode}`);
     }
 
@@ -497,7 +497,7 @@ export async function processRowResponses(connection, row, mappings, surveyVersi
         }
 
         // Insert metadata once after processing every column
-        if (metadata.length > 0) {
+        if (metadata?.length > 0) {
             await connection.query(
                 `INSERT INTO metadata (
                     survey_version_id,

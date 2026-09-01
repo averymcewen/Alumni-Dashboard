@@ -96,7 +96,7 @@ router.get("/:id", async (req, res) => {
             [alumniId]
         );
 
-        if (!alumniRows.length) {
+        if (!alumniRows?.length) {
             return res.status(404).json({ error: "Alumni not found" });
         }
 

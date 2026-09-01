@@ -149,7 +149,7 @@ const OverviewElements: React.FC<Props> = ({
       datasets: averageSalaryPerTerm.datasets?.map((ds: any) => ({
         ...ds,
         backgroundColor: averageSalaryPerTerm.labels?.map(
-          (_: string, idx: number) => colors[idx % colors.length]
+          (_: string, idx: number) => colors[idx % colors?.length]
         ),
         borderWidth: 0,
       })),
@@ -164,7 +164,7 @@ const OverviewElements: React.FC<Props> = ({
       datasets: hoursWorked.datasets?.map((ds: any) => ({
         ...ds,
         backgroundColor: hoursWorked.labels?.map(
-          (_: string, idx: number) => colors[idx % colors.length]
+          (_: string, idx: number) => colors[idx % colors?.length]
         ),
         borderWidth: 0,
       })),
@@ -260,7 +260,7 @@ const OverviewElements: React.FC<Props> = ({
                 <li key={label} className="flex items-center gap-2 text-sm text-gray-700">
                   <span
                     className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                    style={{ backgroundColor: colors[idx % colors.length] }}
+                    style={{ backgroundColor: colors[idx % colors?.length] }}
                   />
                   <span>{label}</span>
                 </li>
@@ -439,7 +439,7 @@ const OverviewElements: React.FC<Props> = ({
                   <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                     <span
                       className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                      style={{ backgroundColor: colors[idx % colors.length] }}
+                      style={{ backgroundColor: colors[idx % colors?.length] }}
                     />
                     <span>{labelHours}</span>
                   </li>

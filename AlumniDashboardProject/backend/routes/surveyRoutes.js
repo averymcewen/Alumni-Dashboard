@@ -44,7 +44,7 @@ router.post("/submit-survey-version", async (req, res) => {
             [surveyName]
         );
 
-        if (surveyRows.length > 0) {
+        if (surveyRows?.length > 0) {
             surveyId = surveyRows[0].survey_id;
 
             // check if that version and name already exist 
@@ -57,7 +57,7 @@ router.post("/submit-survey-version", async (req, res) => {
                 [surveyName, version]
             );
 
-            if (surveyAlreadyExists.length > 0) {
+            if (surveyAlreadyExists?.length > 0) {
                 return res.status(500).json({ error: "Survey Already Exists." });
             }
 

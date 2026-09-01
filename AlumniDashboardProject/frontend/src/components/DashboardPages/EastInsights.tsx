@@ -186,7 +186,7 @@ const EastInsights: React.FC = ({ }) => {
             datasets: engagedLearning.datasets?.map((ds: any) => ({
                 ...ds,
                 backgroundColor: engagedLearning.labels?.map(
-                    (_: string, idx: number) => colors[idx % colors.length]
+                    (_: string, idx: number) => colors[idx % colors?.length]
                 ),
                 borderWidth: 0,
             })),
@@ -367,7 +367,7 @@ const EastInsights: React.FC = ({ }) => {
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                                            style={{ backgroundColor: colors[idx % colors.length] }}
+                                            style={{ backgroundColor: colors[idx % colors?.length] }}
                                         />
                                         <span className="truncate">{labelHours}</span>
                                     </li>

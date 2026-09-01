@@ -18,7 +18,7 @@ export async function findEmployer(connection, employerName) {
         [normalizedEmployer]
     );
 
-    if (rows.length) {
+    if (rows?.length) {
         return {
             employerId: rows[0].employer_id,
             altEmployerName: null

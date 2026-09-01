@@ -76,7 +76,7 @@ export async function findOrCreateAlumni(connection, row, mappings, surveyVersio
                 [email]
             );
 
-            if (existingByEmail.length) {
+            if (existingByEmail?.length) {
                 const alumniId = existingByEmail[0].alumni_id;
 
                 await connection.query(
@@ -179,7 +179,7 @@ export async function findOrCreateAlumniOriginalList(connection, row) {
                 [email]
             );
 
-            if (existingByEmail.length) {
+            if (existingByEmail?.length) {
                 const alumniId = existingByEmail[0].alumni_id;
 
                 await connection.query(
@@ -301,7 +301,7 @@ export async function findOrCreateAlumniFromEmploymentCSV(
 
             const parts = temp.split("," || ".");
 
-            if (parts.length >= 2) {
+            if (parts?.length >= 2) {
                 tempCompanyName = parts[1].trim();
 
                 // handles extra commas in title
@@ -335,7 +335,7 @@ export async function findOrCreateAlumniFromEmploymentCSV(
             [email]
         );
 
-        if (existingByEmail.length) {
+        if (existingByEmail?.length) {
             const alumniId = existingByEmail[0].alumni_id;
 
             await connection.query(
@@ -363,7 +363,7 @@ export async function findOrCreateAlumniFromEmploymentCSV(
                 AND alumni_id = ?`,
                         [employerId, alumniId]);
 
-                    if (existingEmploymentRecord.length > 0) {
+                    if (existingEmploymentRecord?.length > 0) {
                         return;
                     }
 
@@ -605,10 +605,10 @@ export async function insertAlumniDegree(
         );
 
 
-        if (departmentRows.length > 0) {
+        if (departmentRows?.length > 0) {
             department_id = departmentRows[0].department_id;
         }
-        if (programRows.length > 0) {
+        if (programRows?.length > 0) {
             program_id = programRows[0].program_id;
         }
 
@@ -630,7 +630,7 @@ export async function insertAlumniDegree(
         );
 
         // Degree already exists
-        if (existingDegree.length > 0) {
+        if (existingDegree?.length > 0) {
 
             await connection.query(
                 `UPDATE alumni_degrees
@@ -739,7 +739,7 @@ export async function insertEmploymentDegreeFromEmploymentCSV(
         );
 
         // Major exists, but doesn't correspond to a known program.
-        if (programRows.length === 0) {
+        if (programRows?.length === 0) {
             console.log(
                 `Skipping degree for alumni ${alumniId}: ` +
                 `major "${major}" did not match a program`
@@ -766,7 +766,7 @@ export async function insertEmploymentDegreeFromEmploymentCSV(
         );
 
         // Degree already exists
-        if (existingDegree.length > 0) {
+        if (existingDegree?.length > 0) {
             await connection.query(
                 `
                 UPDATE alumni_degrees
@@ -882,7 +882,7 @@ export async function insertDegreeOriginalList(
         // 2. Don't create a degree if major isn't
         //    mapped to a program
         // -----------------------------------------
-        if (programRows.length === 0) {
+        if (programRows?.length === 0) {
             console.log(
                 `Skipping degree for alumni ${alumniId}: ` +
                 `major "${major}" did not match a program`
@@ -908,7 +908,7 @@ export async function insertDegreeOriginalList(
         );
 
         // Degree already exists
-        if (existingDegree.length > 0) {
+        if (existingDegree?.length > 0) {
             await connection.query(
                 `UPDATE alumni_degrees
                  SET program_id = COALESCE(?, program_id)
@@ -995,7 +995,7 @@ export async function createInternshipFromRow(
             return;
         }
 
-        if (!intern_business && internshipTypes.length === 0) return;
+        if (!intern_business && internshipTypes?.length === 0) return;
 
         await connection.query(
             `INSERT INTO internship (
@@ -1084,7 +1084,7 @@ export async function createEmploymentFromRow(
                     where employer_id= ? `,
                         [employerId]);
 
-                    if (employerMatch.length > 0) {
+                    if (employerMatch?.length > 0) {
                         country = employerMatch[0].country;
                     }
                 }
@@ -1115,7 +1115,7 @@ export async function createEmploymentFromRow(
                     where employer_id= ? `,
                 [employerId]);
 
-            if (employerMatch.length > 0) {
+            if (employerMatch?.length > 0) {
                 country = employerMatch[0].employer_country;
             }
         }
@@ -1141,7 +1141,7 @@ export async function createEmploymentFromRow(
         );
 
 
-        if (existingEmployment.length > 0) {
+        if (existingEmployment?.length > 0) {
             await connection.query(
                 `UPDATE employment
          SET
@@ -1221,7 +1221,7 @@ export async function createSurveyAttempt(connection, alumniId, surveyVersionId,
                 [alumniId, surveyVersionId, surveyTime]
             );
 
-            if (existing.length) {
+            if (existing?.length) {
                 return existing[0].survey_attempt_id;
             }
         }

@@ -302,7 +302,7 @@ export const Surveys: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {displayedQuestions.length === 0 ? (
+                      {displayedQuestions?.length === 0 ? (
                         <tr>
                           <td
                             colSpan={4}

@@ -67,7 +67,7 @@ const AlumniDirectory: React.FC = () => {
     });
   }
 
-  const totalAlumni = sortedAlumni.length;
+  const totalAlumni = sortedAlumni?.length;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;

@@ -59,7 +59,7 @@ const PieChart: React.FC<Props> = ({
         if (!groupKey) {
             return [{
                 title,
-                subtitle: `${filtered.length} ${itemLabel}${filtered.length !== 1 ? 's' : ''}`,
+                subtitle: `${filtered?.length} ${itemLabel}${filtered?.length !== 1 ? 's' : ''}`,
                 chartData: buildChart(filtered),
             }];
         }
@@ -74,7 +74,7 @@ const PieChart: React.FC<Props> = ({
 
         return Object.values(grouped)?.map(rows => ({
             title: groupLabelKey ? `${rows[0][groupLabelKey]}` : `Group ${rows[0][groupKey]}`,
-            subtitle: `${rows.length} ${itemLabel}${rows.length !== 1 ? 's' : ''}`,
+            subtitle: `${rows?.length} ${itemLabel}${rows?.length !== 1 ? 's' : ''}`,
             chartData: buildChart(rows),
         }));
     }, [data, groupKey, groupLabelKey, title, itemLabel, filterKey, filterValue]);
@@ -93,7 +93,7 @@ const PieChart: React.FC<Props> = ({
                                     <li key={label} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                                            style={{ backgroundColor: colors[idx % colors.length] }}
+                                            style={{ backgroundColor: colors[idx % colors?.length] }}
                                         />
                                         <span className="truncate">{label}</span>
                                     </li>

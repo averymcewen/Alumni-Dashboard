@@ -475,8 +475,8 @@ export function splitQuestionAndSubquestion(fullText) {
 }
 
 export function detectDelimiter(line) {
-    const tabCount = (line.match(/\t/g) || []).length;
-    const commaCount = (line.match(/,/g) || []).length;
+    const tabCount = (line.match(/\t/g) || [])?.length;
+    const commaCount = (line.match(/,/g) || [])?.length;
 
     if (tabCount > 0) return "\t";
     return commaCount > 0 ? "," : ",";
@@ -498,7 +498,7 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
 
         stream.on("error", reject);
         stream.on("close", () => {
-            if (buffer.length > 0) {
+            if (buffer?.length > 0) {
                 resolve(buffer.replace(/\r$/, ""));
             }
         });
@@ -514,13 +514,13 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
             .pipe(csv({ separator: delimiter, headers: false, strict: false }))
             .on("data", (data) => {
                 parsedRows.push(data);
-                if (parsedRows.length === 2) resolve(parsedRows);
+                if (parsedRows?.length === 2) resolve(parsedRows);
             })
             .on("end", () => resolve(parsedRows))
             .on("error", reject);
     });
 
-    if (!previewRows.length) {
+    if (!previewRows?.length) {
         throw new Error("Uploaded CSV is empty.");
     }
 
@@ -537,7 +537,7 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
     }
 
     if (!fromAdminPage) {
-        if (previewRows.length < 2) {
+        if (previewRows?.length < 2) {
             throw new Error("CSV must contain both machine headers and question text headers.");
         }
 
@@ -545,7 +545,7 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
             String(v || "").trim()
         );
 
-        for (let i = 0; i < machineHeaders.length; i++) {
+        for (let i = 0; i < machineHeaders?.length; i++) {
             questionHeaderMap[machineHeaders[i]] = secondPhysicalRowValues[i] || "";
         }
 
@@ -596,7 +596,7 @@ export async function parseEmploymentCsv(filePath) {
             .on("error", reject);
     });
 
-    if (!rows.length) {
+    if (!rows?.length) {
         throw new Error("Uploaded CSV is empty.");
     }
 
@@ -617,7 +617,7 @@ export async function parseAlumniOriginalFile(filePath) {
             .on("error", reject);
     });
 
-    if (!rows.length) {
+    if (!rows?.length) {
         throw new Error("Uploaded CSV is empty.");
     }
 
@@ -696,7 +696,7 @@ export async function importQUESTIONCsvFile(filePath, surveyVersionId) {
                     AND question_code = ?
                 `, [surveyVersionId, question_code]);
 
-            if (existingRows.length > 0) {
+            if (existingRows?.length > 0) {
                 await connection.query(`
                     UPDATE question
                     SET
@@ -747,7 +747,7 @@ export async function importQUESTIONCsvFile(filePath, surveyVersionId) {
 
         return {
             success: true,
-            rowsImported: rows.length
+            rowsImported: rows?.length
         };
 
     } catch (error) {

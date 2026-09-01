@@ -83,7 +83,7 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
             datasets: MSEFactors.datasets?.map((ds: any) => ({
                 ...ds,
                 backgroundColor: MSEFactors.labels?.map(
-                    (_: string, idx: number) => colors[idx % colors.length]
+                    (_: string, idx: number) => colors[idx % colors?.length]
                 ),
                 borderWidth: 0,
             })),

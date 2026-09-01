@@ -73,7 +73,7 @@ async function savePendingMapping(connection, surveyVersionId, rawColumnName, sa
             [surveyVersionId, rawColumnName]
         );
 
-        if (!existing.length) {
+        if (!existing?.length) {
             await connection.query(
                 `INSERT INTO pending_mapping_review
              (survey_version_id, raw_column_name, normalized_column_name, sample_value, status)
@@ -102,7 +102,7 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         fromAdminPage
     );
 
-    if (!rows.length) {
+    if (!rows?.length) {
         throw new Error("The uploaded CSV contains no data rows.");
     }
 
@@ -118,7 +118,7 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         [surveyVersionId, fileHash]
     );
 
-    if (existingBatch.length > 0) {
+    if (existingBatch?.length > 0) {
         throw new Error("This CSV file has already been uploaded for this survey version.");
     }
 
@@ -177,7 +177,7 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         let skippedCount = 0;
 
 
-        for (let i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows?.length; i++) {
             const row = rows[i];
 
             const sourceResponseId = getSourceResponseId(row, mappings);
@@ -190,7 +190,7 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
                     [surveyVersionId, sourceResponseId]
                 );
 
-                if (existingAttempt.length > 0) {
+                if (existingAttempt?.length > 0) {
                     warnings.push(`Skipping duplicate row with ResponseId: ${sourceResponseId}`);
                     skippedCount++;
                     continue;
@@ -332,7 +332,7 @@ export async function importRESPONSECsvFile(filePath, surveyVersionId, originalF
         return {
             success: true,
             message: "Import completed successfully.",
-            rowsRead: rows.length,
+            rowsRead: rows?.length,
             rowsImported: importedCount,
             rowsSkipped: skippedCount,
             importBatchId,
@@ -358,7 +358,7 @@ export async function importEmploymentCSV(
     const { rows } =
         await parseEmploymentCsv(filePath);
 
-    console.log("Parsing " + rows.length + " rows");
+    console.log("Parsing " + rows?.length + " rows");
 
     const connection = await pool.getConnection();
 
@@ -457,7 +457,7 @@ export async function importOriginalAlumniList(
     const { rows } =
         await parseAlumniOriginalFile(filePath);
 
-    console.log("Parsing " + rows.length + " rows");
+    console.log("Parsing " + rows?.length + " rows");
 
     const connection = await pool.getConnection();
 

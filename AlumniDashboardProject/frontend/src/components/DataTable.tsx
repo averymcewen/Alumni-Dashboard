@@ -55,7 +55,7 @@ function DataTable<T>({
     );
   }
 
-  if (!data.length) {
+  if (!data?.length) {
     return <div className="text-center py-8 text-gray-500">{emptyMessage}</div>;
   }
 

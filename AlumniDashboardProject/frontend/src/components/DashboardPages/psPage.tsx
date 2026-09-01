@@ -79,7 +79,7 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
             datasets: PSModels.datasets?.map((ds: any) => ({
                 ...ds,
                 backgroundColor: PSModels.labels?.map(
-                    (_: string, idx: number) => colors[idx % colors.length]
+                    (_: string, idx: number) => colors[idx % colors?.length]
                 ),
                 borderWidth: 0,
             })),
@@ -146,7 +146,7 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                                            style={{ backgroundColor: colors[idx % colors.length] }}
+                                            style={{ backgroundColor: colors[idx % colors?.length] }}
                                         />
                                         <span>{labelHours}</span>
                                     </li>

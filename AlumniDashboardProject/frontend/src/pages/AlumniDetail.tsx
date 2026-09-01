@@ -247,7 +247,7 @@ const AlumniDetail: React.FC = () => {
                                     </li>
                                 )}
 
-                                {alumni.degrees && alumni.degrees.length > 0 && alumni.degrees[0].raw_degree_code && (
+                                {alumni.degrees && alumni.degrees?.length > 0 && alumni.degrees[0].raw_degree_code && (
                                     <li className="flex items-start">
                                         <Award className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
                                         <div>
@@ -268,7 +268,7 @@ const AlumniDetail: React.FC = () => {
                     <div className="col-span-1 md:col-span-2">
                         <div className="space-y-6">
 
-                            {alumni.degrees && alumni.degrees.length > 0 && (
+                            {alumni.degrees && alumni.degrees?.length > 0 && (
                                 <div className="card">
                                     <h2 className="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">
                                         Degrees
@@ -304,7 +304,7 @@ const AlumniDetail: React.FC = () => {
 
 
 
-                            {alumni.employment && alumni.employment.length > 0 && (
+                            {alumni.employment && alumni.employment?.length > 0 && (
 
 
 
@@ -332,7 +332,7 @@ const AlumniDetail: React.FC = () => {
                                                     </p> */}
                                                 </div>
 
-                                                {/* {job.salaries.length > 0 && ( */}
+                                                {/* {job.salaries?.length > 0 && ( */}
 
                                                 {job.salary && (
                                                     <div className="flex flex-wrap gap-2">
@@ -384,7 +384,7 @@ const AlumniDetail: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* {alumni.graduateAdmissions && alumni.graduateAdmissions.length > 0 && (
+                            {/* {alumni.graduateAdmissions && alumni.graduateAdmissions?.length > 0 && (
                                 <div className="card">
                                     <h2 className="text-lg font-semibold mb-4 text-gray-900 border-b pb-2">Graduate Studies</h2>
 
@@ -418,7 +418,7 @@ const AlumniDetail: React.FC = () => {
 
 
 
-                            {alumni.internships && alumni.internships.length > 0 && (
+                            {alumni.internships && alumni.internships?.length > 0 && (
                                 <div className="card">
                                     <h2 className="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">Internships</h2>
 
@@ -477,7 +477,7 @@ const AlumniDetail: React.FC = () => {
 
 
 
-                    {alumni.surveyAttempts && alumni.surveyAttempts.length > 0 && (
+                    {alumni.surveyAttempts && alumni.surveyAttempts?.length > 0 && (
                         <div className="card col-span-3">
                             <h2 className="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">
                                 Survey Responses

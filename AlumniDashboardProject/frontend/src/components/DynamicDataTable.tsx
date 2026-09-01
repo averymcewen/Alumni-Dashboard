@@ -43,7 +43,7 @@ function DynamicDataTable<T>({
     const parentRef = React.useRef<HTMLDivElement>(null);
 
     const rowVirtualizer = useVirtualizer({
-        count: data.length,
+        count: data?.length,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 44,
         overscan: 10,
@@ -159,7 +159,7 @@ function DynamicDataTable<T>({
 
 
 
-    if (!data.length) {
+    if (!data?.length) {
         return <div className="text-center py-8 text-gray-500">{emptyMessage}</div>;
     }
 

@@ -138,11 +138,11 @@ const ViewSurveyResponsesPage: React.FC = () => {
 
                     const countA = Object.values(a.responses ?? {})
                         .filter(value => value != null && value !== "")
-                        .length;
+                        ?.length;
 
                     const countB = Object.values(b.responses ?? {})
                         .filter(value => value != null && value !== "")
-                        .length;
+                        ?.length;
 
                     return countB - countA;
                 });
