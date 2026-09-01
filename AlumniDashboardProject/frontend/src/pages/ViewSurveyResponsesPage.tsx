@@ -171,7 +171,7 @@ const ViewSurveyResponsesPage: React.FC = () => {
             value: (row) => row.last_name,
         },
 
-        ...responseQuestionsForTable.map(question => ({
+        ...responseQuestionsForTable?.map(question => ({
             id: question,
             header: question,
             value: (row) => row.responses[question]

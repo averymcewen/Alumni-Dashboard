@@ -149,11 +149,11 @@ const EastInsights: React.FC = ({ }) => {
     };
 
     const ageStats = {
-        labels: data.age.map(item => item.value_text),
+        labels: data.age?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.age.map(item => item.percentage),
+                data: data.age?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -163,11 +163,11 @@ const EastInsights: React.FC = ({ }) => {
     };
 
     const engagedLearning = {
-        labels: data.engagedLearning.map(item => item.value_text),
+        labels: data.engagedLearning?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.engagedLearning.map(item => item.percentage),
+                data: data.engagedLearning?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -183,9 +183,9 @@ const EastInsights: React.FC = ({ }) => {
 
         return {
             ...engagedLearning,
-            datasets: engagedLearning.datasets.map((ds: any) => ({
+            datasets: engagedLearning.datasets?.map((ds: any) => ({
                 ...ds,
-                backgroundColor: engagedLearning.labels.map(
+                backgroundColor: engagedLearning.labels?.map(
                     (_: string, idx: number) => colors[idx % colors.length]
                 ),
                 borderWidth: 0,
@@ -222,20 +222,20 @@ const EastInsights: React.FC = ({ }) => {
     ];
 
     const barData = {
-        labels: data.effectivefactors.map(item => item.subquestion_text),
-        datasets: ANSWER_KEYS.map(({ key, label, color }) => ({
+        labels: data.effectivefactors?.map(item => item.subquestion_text),
+        datasets: ANSWER_KEYS?.map(({ key, label, color }) => ({
             label,
-            data: data.effectivefactors.map(item => parseFloat(item[key])),
+            data: data.effectivefactors?.map(item => parseFloat(item[key])),
             backgroundColor: color,
         })),
     };
 
     const eastStudentServicesBar = {
-        labels: data.eastStudentServices.map(item => item.value_text),
+        labels: data.eastStudentServices?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.eastStudentServices.map(item => Number(item.percentage)),
+                data: data.eastStudentServices?.map(item => Number(item.percentage)),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -280,7 +280,7 @@ const EastInsights: React.FC = ({ }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.topEffectiveFactors.map((item) => {
+                                {data.topEffectiveFactors?.map((item) => {
                                     return (
                                         <tr className="items-center" key={item.value_text}>
                                             <td
@@ -311,7 +311,7 @@ const EastInsights: React.FC = ({ }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.rankEffective.map((item) => {
+                                {data.rankEffective?.map((item) => {
                                     return (
                                         <tr className="items-center" key={item.value_text}>
                                             <td
@@ -344,7 +344,7 @@ const EastInsights: React.FC = ({ }) => {
                     title="Student Confidence"
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {data.studentConfidence.map((item) => (
+                        {data.studentConfidence?.map((item) => (
                             <GaugeChart
                                 key={item.subquestion_text}
                                 value={Number(item.average)}
@@ -363,7 +363,7 @@ const EastInsights: React.FC = ({ }) => {
                     <div className="space-y-3 min-w-full h-full self-start">
                         <div className="flex flex-col lg:flex-row items-center gap-8 w-full min-w-0">
                             <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40 lg:pl-25 min-w-0">
-                                {engagedLearning.labels.map((labelHours: string, idx: number) => (
+                                {engagedLearning.labels?.map((labelHours: string, idx: number) => (
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
@@ -390,7 +390,7 @@ const EastInsights: React.FC = ({ }) => {
                     title="Gender"
                 >
                     <div className="space-y-3 min-w-full ">
-                        {data.gender.map((item) => {
+                        {data.gender?.map((item) => {
                             const maxNumAlum = data.gender[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';
@@ -430,7 +430,7 @@ const EastInsights: React.FC = ({ }) => {
                     title="Veteran Status"
                 >
                     <div className="space-y-3 min-w-full ">
-                        {data.veteran.map((item) => {
+                        {data.veteran?.map((item) => {
                             const maxNumAlum = data.veteran[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';

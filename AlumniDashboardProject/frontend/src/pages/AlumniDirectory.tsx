@@ -94,19 +94,19 @@ const AlumniDirectory: React.FC = () => {
 
   const employerOptions = [...new Set(
     alumni
-      .map(person => person.employer_name?.trim())
+      ?.map(person => person.employer_name?.trim())
       .filter((dept): dept is string => !!dept)
   )].sort();
 
   const salaryOptions = [...new Set(
     alumni
-      .map(person => person.salary?.trim())
+      ?.map(person => person.salary?.trim())
       .filter((degree): degree is string => !!degree)
   )].sort();
 
   const programOptions = [...new Set(
     alumni
-      .map(person => person.program_name?.trim())
+      ?.map(person => person.program_name?.trim())
       .filter((program): program is string => !!program)
   )].sort();
 
@@ -118,7 +118,7 @@ const AlumniDirectory: React.FC = () => {
         const data = await apiService.getAllAlumni();
         setAlumni(Array.isArray(data) ? data : []);
         setAlumni(prevAlumni =>
-          prevAlumni.map(alumni => {
+          prevAlumni?.map(alumni => {
             if (!alumni.first_name) {
               return { ...alumni, first_name: alumni.temp_name };
             }
@@ -218,7 +218,7 @@ const AlumniDirectory: React.FC = () => {
               onChange={handleFilterChange}
               className=" w-full max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-gray-300 shadow-sm min-w-25 focus:ring-weber-purple focus:border-weber-purple sm:text-sm">
               <option value="">All Programs</option>
-              {programOptions.map(program => (
+              {programOptions?.map(program => (
                 <option key={program} value={program}>
                   {program}
                 </option>
@@ -241,7 +241,7 @@ const AlumniDirectory: React.FC = () => {
               onChange={handleFilterChange}
               className=" w-full max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-gray-300 shadow-sm min-w-25 focus:ring-weber-purple focus:border-weber-purple sm:text-sm max-w-50">
               <option value="">All Employers</option>
-              {employerOptions.map(emp => (
+              {employerOptions?.map(emp => (
                 <option key={emp} value={emp}>
                   {emp}
                 </option>
@@ -263,7 +263,7 @@ const AlumniDirectory: React.FC = () => {
               onChange={handleFilterChange}
               className=" w-full max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-gray-300 shadow-sm min-w-40 focus:ring-weber-purple focus:border-weber-purple sm:text-sm">
               <option value="">All Salaries</option>
-              {salaryOptions.map(salary => (
+              {salaryOptions?.map(salary => (
                 <option key={salary} value={salary}>
                   {salary}
                 </option>

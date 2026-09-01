@@ -524,7 +524,7 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
         throw new Error("Uploaded CSV is empty.");
     }
 
-    const machineHeaders = Object.values(previewRows[0]).map((v) =>
+    const machineHeaders = Object.values(previewRows[0])?.map((v) =>
         String(v || "").replace(/^\uFEFF/, "").trim()
     );
 
@@ -541,7 +541,7 @@ export async function parseResponseCsv(filePath, fromAdminPage) {
             throw new Error("CSV must contain both machine headers and question text headers.");
         }
 
-        const secondPhysicalRowValues = Object.values(previewRows[1]).map((v) =>
+        const secondPhysicalRowValues = Object.values(previewRows[1])?.map((v) =>
             String(v || "").trim()
         );
 

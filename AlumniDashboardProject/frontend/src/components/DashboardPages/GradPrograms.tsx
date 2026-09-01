@@ -101,10 +101,10 @@ const GradPrograms: React.FC = ({
     ];
 
     const barData = {
-        labels: data.gradStudentEffective.map(item => item.subquestion_text),
-        datasets: ANSWER_KEYS.map(({ key, label, color }) => ({
+        labels: data.gradStudentEffective?.map(item => item.subquestion_text),
+        datasets: ANSWER_KEYS?.map(({ key, label, color }) => ({
             label,
-            data: data.gradStudentEffective.map(item => parseFloat(item[key])),
+            data: data.gradStudentEffective?.map(item => parseFloat(item[key])),
             backgroundColor: color,
         })),
     };
@@ -121,7 +121,7 @@ const GradPrograms: React.FC = ({
                     title="Overall Quality of Graduate Education from EAST">
 
                     <div className="space-y-3 min-w-full pl-20 pr-20 self-start">
-                        {data.overallQuality.map((item) => {
+                        {data.overallQuality?.map((item) => {
                             const maxNumAlum = data.overallQuality[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';
@@ -146,7 +146,7 @@ const GradPrograms: React.FC = ({
                     title="Graduate Program Recommended"
                 >
                     <div className=" gap-6 justify-items-center justify-center">
-                        {data.gradSchoolRecommend.map((item) => (
+                        {data.gradSchoolRecommend?.map((item) => (
                             <PercentageDial
                                 key={item.subquestion_text}
                                 value={Number(item.percentage)}
@@ -172,7 +172,7 @@ const GradPrograms: React.FC = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.gradschoolEffective.map((item) => {
+                                {data.gradschoolEffective?.map((item) => {
                                     console.log("item value is: " + item.value_text);
 
                                     return (

@@ -56,11 +56,11 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
     }, [])
 
     const PSModels = {
-        labels: data.PSModel.map(item => item.value_text),
+        labels: data.PSModel?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.PSModel.map(item => item.percentage),
+                data: data.PSModel?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -76,9 +76,9 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
 
         return {
             ...PSModels,
-            datasets: PSModels.datasets.map((ds: any) => ({
+            datasets: PSModels.datasets?.map((ds: any) => ({
                 ...ds,
-                backgroundColor: PSModels.labels.map(
+                backgroundColor: PSModels.labels?.map(
                     (_: string, idx: number) => colors[idx % colors.length]
                 ),
                 borderWidth: 0,
@@ -101,7 +101,7 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -142,7 +142,7 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
 
                         <div className="flex items-center gap-8">
                             <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
-                                {PSModels.labels.map((labelHours: string, idx: number) => (
+                                {PSModels.labels?.map((labelHours: string, idx: number) => (
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
@@ -182,7 +182,7 @@ const PSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.PSdeca.map((item) => (
+                                {data.PSdeca?.map((item) => (
                                     <tr key={item.value_text} className="border-b border-gray-300 drop-shadow-sm">
                                         <td className="px-6 py-3 w-full">{item.value_text}</td>
                                     </tr>

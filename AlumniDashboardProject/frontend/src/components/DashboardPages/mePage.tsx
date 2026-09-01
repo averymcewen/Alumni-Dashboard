@@ -53,7 +53,7 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
 
                             const maxNumAlum = data.getApproval[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
@@ -87,7 +87,7 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                 <ChartCard
                     title="Areas of Mechanical Engineering Where Students Are Seeking Employment">
                     <div className="space-y-3 min-w-full ">
-                        {data.MEIndustries.map((item) => {
+                        {data.MEIndustries?.map((item) => {
                             const maxNumAlum = data.MEIndustries[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';
@@ -119,7 +119,7 @@ const MEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName,
                 <ChartCard
                     title="Student Confidence in Pursuing Licensure Post-Graduation">
                     <div className="space-y-3 min-w-full ">
-                        {data.MELicensure.map((item) => {
+                        {data.MELicensure?.map((item) => {
                             const maxNumAlum = data.MELicensure[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';

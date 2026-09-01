@@ -89,7 +89,7 @@ export const Surveys: React.FC = () => {
 
         setQuestions(Array.isArray(data) ? data : []);
         const categories = [...new Set(
-          data.map(question => question.question_category)
+          data?.map(question => question.question_category)
             .filter((question): question is string => !!question)
         )].sort();
         console.log(data);
@@ -171,7 +171,7 @@ export const Surveys: React.FC = () => {
       {activeTab === 'surveys' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {survey.map((survey) => (
+            {survey?.map((survey) => (
               <div
                 key={survey.survey_id}
                 className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow"
@@ -228,7 +228,7 @@ export const Surveys: React.FC = () => {
                 value={selectedSurvey}
                 onChange={handleDropdownSelection}>
                 <option value=''>Select Survey</option>
-                {survey.map((survey) => (
+                {survey?.map((survey) => (
                   <option
                     key={survey.survey_id}
                     value={survey.survey_version_id}
@@ -247,7 +247,7 @@ export const Surveys: React.FC = () => {
                 value={selectedCategory}
                 className=" w-full max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-md border-gray-300 shadow-sm min-w-25 focus:ring-weber-purple focus:border-weber-purple sm:text-sm max-w-50">
                 <option value="all">All Question Categories</option>
-                {questionCategories.map(category => (
+                {questionCategories?.map(category => (
                   <option key={category} value={category}>
                     {category}
                   </option>
@@ -313,7 +313,7 @@ export const Surveys: React.FC = () => {
                         </tr>
                       ) :
 
-                        (displayedQuestions.map((question) => (
+                        (displayedQuestions?.map((question) => (
                           <tr key={question.question_id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
                               <div className="text-sm font-medium text-gray-900">

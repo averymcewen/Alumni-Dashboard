@@ -67,11 +67,11 @@ const ECEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
     }, [])
 
     const EceFactors = {
-        labels: data.ECEFactors.map(item => item.value_text),
+        labels: data.ECEFactors?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.ECEFactors.map(item => item.percentage),
+                data: data.ECEFactors?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -87,11 +87,11 @@ const ECEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
     };
 
     const ECELicensure = {
-        labels: data.ECELicensure.map(item => item.value_text),
+        labels: data.ECELicensure?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.ECELicensure.map(item => item.percentage),
+                data: data.ECELicensure?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -115,7 +115,7 @@ const ECEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -183,7 +183,7 @@ const ECEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Student Confidence in Pursuing Certification Post-Graduation">
                     <div className="space-y-3 min-w-full ">
-                        {data.ECELicensure.map((item) => {
+                        {data.ECELicensure?.map((item) => {
                             const maxNumAlum = data.ECELicensure[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';

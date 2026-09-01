@@ -106,7 +106,7 @@ const AlumniDetail: React.FC = () => {
 
     const minors = alumni.degrees
         ?.filter(degree => degree.minor)
-        .map(degree => degree.minor);
+        ?.map(degree => degree.minor);
 
     return (
         <div className="animate-fade-in">
@@ -274,7 +274,7 @@ const AlumniDetail: React.FC = () => {
                                         Degrees
                                     </h2>
 
-                                    {alumni.degrees.map((degree, index) => (
+                                    {alumni.degrees?.map((degree, index) => (
                                         <div key={index} className="mb-4 flex justify-between">
                                             <div>
                                                 <h3 className="font-medium text-gray-900">
@@ -313,7 +313,7 @@ const AlumniDetail: React.FC = () => {
 
 
 
-                                    {alumni.employment.map((job, index) => (
+                                    {alumni.employment?.map((job, index) => (
                                         <div key={index} className="mb-4 last:mb-0">
                                             <div className="flex justify-between items-start">
                                                 <div>
@@ -336,7 +336,7 @@ const AlumniDetail: React.FC = () => {
 
                                                 {job.salary && (
                                                     <div className="flex flex-wrap gap-2">
-                                                        {/* {job.salary.map((salary: number) => ( */}
+                                                        {/* {job.salary?.map((salary: number) => ( */}
                                                         <div
                                                             // key={salary}
                                                             className="chip bg-accent-gold text-gray-800"
@@ -388,7 +388,7 @@ const AlumniDetail: React.FC = () => {
                                 <div className="card">
                                     <h2 className="text-lg font-semibold mb-4 text-gray-900 border-b pb-2">Graduate Studies</h2>
 
-                                    {alumni.graduateAdmissions.map((admission, index) => (
+                                    {alumni.graduateAdmissions?.map((admission, index) => (
                                         <div key={index} className="mb-4 last:mb-0">
                                             <h3 className="font-medium text-gray-900">{admission.school_name}</h3>
                                             <p className="text-sm text-gray-700">{admission.program || 'Graduate Program'}</p>
@@ -422,7 +422,7 @@ const AlumniDetail: React.FC = () => {
                                 <div className="card">
                                     <h2 className="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">Internships</h2>
 
-                                    {groupedInternships.map((internship, index) => (
+                                    {groupedInternships?.map((internship, index) => (
                                         <div key={index} className="mb-4 last:mb-0">
                                             <h3 className="font-medium text-gray-900">{internship.intern_business}</h3>
 
@@ -483,7 +483,7 @@ const AlumniDetail: React.FC = () => {
                                 Survey Responses
                             </h2>
 
-                            {alumni.surveyAttempts.map((survey) => {
+                            {alumni.surveyAttempts?.map((survey) => {
                                 // Get only the questions for this survey attempt
                                 const attemptQuestions =
                                     alumni.surveyQuestions?.filter(
@@ -511,7 +511,7 @@ const AlumniDetail: React.FC = () => {
                                         </h3>
 
                                         <div className="mt-4 space-y-4">
-                                            {Object.entries(groupedQuestions).map(
+                                            {Object.entries(groupedQuestions)?.map(
                                                 ([questionText, answers]) => (
                                                     <div key={questionText}>
                                                         <h4 className="font-medium text-gray-800">
@@ -519,7 +519,7 @@ const AlumniDetail: React.FC = () => {
                                                         </h4>
 
                                                         <ul className="list-none list-inside mt-1 text-gray-700 ml-2">
-                                                            {answers.map((answer, index) => (
+                                                            {answers?.map((answer, index) => (
                                                                 <li key={index}>
                                                                     {answer.value_text ??
                                                                         answer.option_text ??

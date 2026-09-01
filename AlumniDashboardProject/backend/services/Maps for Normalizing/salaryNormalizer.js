@@ -35,7 +35,7 @@ const bucketedStringMap = {
  * Buckets a raw numeric income into one of the canonical salary ranges.
  */
 function bucketNumericIncome(num) {
-    const bucket = SALARY_BUCKETS.find(b => num >= b.min && num <= b.max);
+    const bucket = SALARY_BUCKETS?.find(b => num >= b.min && num <= b.max);
     return bucket ? bucket.label : null;
 }
 

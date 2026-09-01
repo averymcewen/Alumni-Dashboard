@@ -77,7 +77,7 @@ function DynamicDataTable<T>({
 
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(() =>
         Object.fromEntries(
-            columns.map(column => [
+            columns?.map(column => [
                 column.id,
                 column.width
                     ? Number.parseInt(column.width)
@@ -89,7 +89,7 @@ function DynamicDataTable<T>({
     React.useEffect(() => {
         setColumnWidths(
             Object.fromEntries(
-                columns.map(column => [
+                columns?.map(column => [
                     column.id,
                     getDefaultWidth(column.header),
                 ])
@@ -138,7 +138,7 @@ function DynamicDataTable<T>({
     const gridTemplateColumns = React.useMemo(
         () =>
             columns
-                .map(column => `${columnWidths[column.id]}px`)
+                ?.map(column => `${columnWidths[column.id]}px`)
                 .join(" "),
         [columns, columnWidths]
     );
@@ -150,7 +150,7 @@ function DynamicDataTable<T>({
         return (
             <div className="animate-pulse">
                 <div className="h-8 bg-gray-200 rounded mb-4"></div>
-                {[...Array(5)].map((_, index) => (
+                {[...Array(5)]?.map((_, index) => (
                     <div key={index} className="h-12 bg-gray-100 rounded-md mb-2"></div>
                 ))}
             </div>
@@ -192,7 +192,7 @@ function DynamicDataTable<T>({
                                 gridTemplateColumns,
                             }}
                         >
-                            {columns.map((column) => (
+                            {columns?.map((column) => (
                                 <div
                                     key={column.id}
                                     className="relative border-r border-gray-200"
@@ -225,7 +225,7 @@ function DynamicDataTable<T>({
                                 position: "relative",
                             }}
                         >
-                            {virtualRows.map((virtualRow) => {
+                            {virtualRows?.map((virtualRow) => {
 
                                 const row = data[virtualRow.index];
 
@@ -260,7 +260,7 @@ function DynamicDataTable<T>({
                                                 gridTemplateColumns,
                                             }}
                                         >
-                                            {columns.map((column) => {
+                                            {columns?.map((column) => {
 
                                                 const value = column.value(row);
 

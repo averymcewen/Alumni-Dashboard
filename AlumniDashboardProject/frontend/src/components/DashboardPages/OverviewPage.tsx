@@ -146,9 +146,9 @@ const OverviewElements: React.FC<Props> = ({
 
     return {
       ...averageSalaryPerTerm,
-      datasets: averageSalaryPerTerm.datasets.map((ds: any) => ({
+      datasets: averageSalaryPerTerm.datasets?.map((ds: any) => ({
         ...ds,
-        backgroundColor: averageSalaryPerTerm.labels.map(
+        backgroundColor: averageSalaryPerTerm.labels?.map(
           (_: string, idx: number) => colors[idx % colors.length]
         ),
         borderWidth: 0,
@@ -161,9 +161,9 @@ const OverviewElements: React.FC<Props> = ({
 
     return {
       ...hoursWorked,
-      datasets: hoursWorked.datasets.map((ds: any) => ({
+      datasets: hoursWorked.datasets?.map((ds: any) => ({
         ...ds,
-        backgroundColor: hoursWorked.labels.map(
+        backgroundColor: hoursWorked.labels?.map(
           (_: string, idx: number) => colors[idx % colors.length]
         ),
         borderWidth: 0,
@@ -187,7 +187,7 @@ const OverviewElements: React.FC<Props> = ({
           subtitle="Direction Post Grad per Alumni"
         >
           <div className="space-y-3 min-w-full h-full self-start">
-            {postGradData.map((item) => (
+            {postGradData?.map((item) => (
               <div
                 key={item.destination_group}
                 className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
@@ -212,7 +212,7 @@ const OverviewElements: React.FC<Props> = ({
           subtitle="How alumni describe their career outlook"
         >
           <div className="space-y-3 min-w-full">
-            {careerOutlook.map((item) => {
+            {careerOutlook?.map((item) => {
               const Icon = weatherIcons[item.value_text] ?? Cloud;
               return (
                 <div
@@ -234,7 +234,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-3">
         <ChartCard title="Primary Class Format">
           <div className="space-y-3 min-w-full h-full self-start">
-            {primaryClassformat.map((item) => (
+            {primaryClassformat?.map((item) => (
               <div
                 key={item.value_text}
                 className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
@@ -256,7 +256,7 @@ const OverviewElements: React.FC<Props> = ({
         >
           <div className="flex flex-col sm:flex-row items-center gap-8">
             <ul className="flex flex-col pl-0 sm:pl-0 gap-3 shrink-0 w-full sm:w-auto sm:min-w-40">
-              {averageSalaryPerTerm.labels.map((label: string, idx: number) => (
+              {averageSalaryPerTerm.labels?.map((label: string, idx: number) => (
                 <li key={label} className="flex items-center gap-2 text-sm text-gray-700">
                   <span
                     className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
@@ -277,7 +277,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-6">
         <ChartCard title="Top 5 Employers post-graduation">
           <div className="space-y-3 min-w-full self-start">
-            {top5Employers.map((item) => {
+            {top5Employers?.map((item) => {
               const isTopTied = item.numAlum === top5Employers[0]?.numAlum;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (
@@ -301,7 +301,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-3">
         <ChartCard title="Employer by County">
           <div className="space-y-3 min-w-full self-start">
-            {employerByCounty.map((item) => {
+            {employerByCounty?.map((item) => {
               const isTopTied = item.numAlum === employerByCounty[0]?.numAlum;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (
@@ -325,7 +325,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-6">
         <ChartCard title="Top 5 Internship Companies">
           <div className="space-y-3 min-w-full self-start">
-            {top5InternshipCo.map((item) => {
+            {top5InternshipCo?.map((item) => {
               const isTopTied = item.numAlum === top5InternshipCo[0]?.numAlum;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (
@@ -349,7 +349,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-3">
         <ChartCard title="Internship Locations">
           <div className="space-y-3 min-w-full self-start">
-            {internshipByLocation.map((item) => {
+            {internshipByLocation?.map((item) => {
               const isTopTied = item.numAlum === internshipByLocation[0]?.numAlum;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (
@@ -373,7 +373,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-9">
         <ChartCard title="Recommendation of Program of Study">
           <div className="space-y-3 min-w-full">
-            {programOfStudyApproval.map((item) => {
+            {programOfStudyApproval?.map((item) => {
               const isTopTied = item.percentage === programOfStudyApproval[0]?.percentage;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (
@@ -397,7 +397,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-9">
         <ChartCard title="Program of Study Recommended Improvements">
           <div className="space-y-3 min-w-full h-full self-start">
-            {programOfStudyImprovements.map((item) => (
+            {programOfStudyImprovements?.map((item) => (
               <div
                 key={item.value_text}
                 className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
@@ -415,7 +415,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="sm:col-span-2 lg:col-span-3">
         <ChartCard title="Top 5 Grad Schools" subtitle="Where Our Grads Are Going Next">
           <div className="space-y-3 min-w-full h-full self-start">
-            {gradSchoolData.map((item) => (
+            {gradSchoolData?.map((item) => (
               <div
                 key={item.value_text}
                 className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
@@ -435,7 +435,7 @@ const OverviewElements: React.FC<Props> = ({
           <div className="space-y-3 min-w-full h-full self-start">
             <div className="flex flex-col lg:flex-row items-center gap-6">
               <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40">
-                {hoursWorked.labels.map((labelHours: string, idx: number) => (
+                {hoursWorked.labels?.map((labelHours: string, idx: number) => (
                   <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                     <span
                       className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
@@ -457,7 +457,7 @@ const OverviewElements: React.FC<Props> = ({
       <div className="col-span-1 sm:col-span-2 lg:col-span-4">
         <ChartCard title="Graduate Degrees to be Pursued">
           <div className="space-y-3 min-w-full h-full self-start">
-            {gradDegreePursue.map((item) => {
+            {gradDegreePursue?.map((item) => {
               const isTopTied = item.percentage === gradDegreePursue[0]?.percentage;
               const highlightClass = isTopTied ? 'font-bold text-lg' : '';
               return (

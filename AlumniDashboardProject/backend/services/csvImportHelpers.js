@@ -182,7 +182,7 @@ export async function ensureMappingsForCsvHeaders(connection, surveyVersionId, h
             [surveyVersionId]
         );
 
-        const existingSet = new Set(existingRows.map(r => normalizeString(r.raw_column_name)));
+        const existingSet = new Set(existingRows?.map(r => normalizeString(r.raw_column_name)));
 
         for (const header of headers) {
             const normalizedHeader = normalizeString(header);

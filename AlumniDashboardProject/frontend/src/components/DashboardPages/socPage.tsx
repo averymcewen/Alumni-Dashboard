@@ -63,11 +63,11 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
 
     const SOCAI = {
-        labels: data.SOCAI.map(item => item.value_text),
+        labels: data.SOCAI?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.SOCAI.map(item => item.percentage),
+                data: data.SOCAI?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -81,9 +81,9 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
         return {
             ...SOCAI,
-            datasets: SOCAI.datasets.map((ds: any) => ({
+            datasets: SOCAI.datasets?.map((ds: any) => ({
                 ...ds,
-                backgroundColor: SOCAI.labels.map(
+                backgroundColor: SOCAI.labels?.map(
                     (_: string, idx: number) => colors[idx % colors.length]
                 ),
                 borderWidth: 0,
@@ -106,7 +106,7 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -142,7 +142,7 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Student Confidence in Pursuing Certification Post-Graduation">
                     <div className="space-y-3 min-w-full ">
-                        {data.SOCCert.map((item) => {
+                        {data.SOCCert?.map((item) => {
                             const maxNumAlum = data.SOCCert[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';
@@ -182,7 +182,7 @@ const SOCPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
                         <div className="flex items-center gap-8">
                             <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
-                                {SOCAI.labels.map((labelHours: string, idx: number) => (
+                                {SOCAI.labels?.map((labelHours: string, idx: number) => (
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"

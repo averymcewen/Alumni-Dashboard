@@ -48,7 +48,7 @@ function DataTable<T>({
     return (
       <div className="animate-pulse">
         <div className="h-8 bg-gray-200 rounded mb-4"></div>
-        {[...Array(5)].map((_, index) => (
+        {[...Array(5)]?.map((_, index) => (
           <div key={index} className="h-12 bg-gray-100 rounded-md mb-2"></div>
         ))}
       </div>
@@ -64,7 +64,7 @@ function DataTable<T>({
       <table className="w-full table-fixed divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            {columns.map((column, index) => (
+            {columns?.map((column, index) => (
               <th
                 key={index}
                 scope="col"
@@ -80,13 +80,13 @@ function DataTable<T>({
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((row, rowIndex) => (
+          {data?.map((row, rowIndex) => (
             <tr
               key={rowIndex}
               className={`${onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
               onClick={() => onRowClick && onRowClick(row)}
             >
-              {columns.map((column, colIndex) => (
+              {columns?.map((column, colIndex) => (
                 <td key={colIndex} className="px-6 py-4 text-sm text-gray-500 truncate">
                   {column.render
                     ? column.render(row[column.accessor], row)

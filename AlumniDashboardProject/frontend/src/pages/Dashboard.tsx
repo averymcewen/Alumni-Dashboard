@@ -68,13 +68,13 @@ const Dashboard: React.FC = () => {
 
     const defineDepartments = async () => {
         // these are used for assigning the correct department per tab
-        socRow = stats.alumniPerProgram.find(r => r.department_id === 1);
-        autoRow = stats.alumniPerProgram.find(r => r.department_id === 2);
-        cbsRow = stats.alumniPerProgram.find(r => r.department_id === 3);
-        eceRow = stats.alumniPerProgram.find(r => r.department_id === 4);
-        mseRow = stats.alumniPerProgram.find(r => r.department_id === 5);
-        meRow = stats.alumniPerProgram.find(r => r.department_id === 6);
-        psRow = stats.alumniPerProgram.find(r => r.department_id === 7);
+        socRow = stats.alumniPerProgram?.find(r => r.department_id === 1);
+        autoRow = stats.alumniPerProgram?.find(r => r.department_id === 2);
+        cbsRow = stats.alumniPerProgram?.find(r => r.department_id === 3);
+        eceRow = stats.alumniPerProgram?.find(r => r.department_id === 4);
+        mseRow = stats.alumniPerProgram?.find(r => r.department_id === 5);
+        meRow = stats.alumniPerProgram?.find(r => r.department_id === 6);
+        psRow = stats.alumniPerProgram?.find(r => r.department_id === 7);
     }
 
     const departmentPages = {
@@ -150,11 +150,11 @@ const Dashboard: React.FC = () => {
 
 
     const careerOutlookData = {
-        labels: stats.careerOutlook.map(item => item.value_text),
+        labels: stats.careerOutlook?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Average Salary ($)',
-                data: stats.careerOutlook.map(item => item.numAnswers),
+                data: stats.careerOutlook?.map(item => item.numAnswers),
                 backgroundColor: '#38b2ac',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -168,11 +168,11 @@ const Dashboard: React.FC = () => {
 
 
     const averageSalaryPerTerm = {
-        labels: stats.averageSalaryPerTerm.map(item => item.value_text),
+        labels: stats.averageSalaryPerTerm?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Average Salary',
-                data: stats.averageSalaryPerTerm.map(item => item.numAlum),
+                data: stats.averageSalaryPerTerm?.map(item => item.numAlum),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -184,11 +184,11 @@ const Dashboard: React.FC = () => {
     };
 
     const hoursWorked = {
-        labels: stats.hoursWorked.map(item => item.value_text),
+        labels: stats.hoursWorked?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: stats.hoursWorked.map(item => item.percentage),
+                data: stats.hoursWorked?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -200,11 +200,11 @@ const Dashboard: React.FC = () => {
     };
 
     const workExperience = {
-        labels: stats.workExperience.map(item => item.value_text),
+        labels: stats.workExperience?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: stats.hoursWorked.map(item => item.percentage),
+                data: stats.hoursWorked?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -217,11 +217,11 @@ const Dashboard: React.FC = () => {
 
 
     const gradSchoolData = {
-        labels: stats.gradSchools.map(item => item.value_text),
+        labels: stats.gradSchools?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Average Salary ($)',
-                data: stats.gradSchools.map(item => item.numStudentsPerSchool),
+                data: stats.gradSchools?.map(item => item.numStudentsPerSchool),
                 backgroundColor: '#38b2ac',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -309,7 +309,7 @@ const Dashboard: React.FC = () => {
                                 Select a Department...
                             </option>
 
-                            {Object.entries(departmentPages).map(([key, department]) => (
+                            {Object.entries(departmentPages)?.map(([key, department]) => (
                                 <option key={key} value={key}>
                                     {department.label}
                                 </option>
@@ -322,7 +322,7 @@ const Dashboard: React.FC = () => {
             {loading ? (
                 <div className="animate-pulse space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[...Array(4)].map((_, i) => (
+                        {[...Array(4)]?.map((_, i) => (
                             <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
                         ))}
                     </div>

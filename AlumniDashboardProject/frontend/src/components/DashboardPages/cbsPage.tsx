@@ -59,7 +59,7 @@ const CBSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -95,7 +95,7 @@ const CBSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Student Confidence in Pursuing Certification Post-Graduation">
                     <div className="space-y-3 min-w-full ">
-                        {data.CBSLicensure.map((item) => {
+                        {data.CBSLicensure?.map((item) => {
                             const maxNumAlum = data.CBSLicensure[0]?.percentage;
                             const isTopTied = item.percentage === maxNumAlum;
                             const highlightClass = isTopTied ? 'font-bold text-lg' : '';
@@ -130,7 +130,7 @@ const CBSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Industry Skill Confidence">
                     <div className="flex flex-wrap justify-center">
-                        {data.CBSConfidence.map((item) => (
+                        {data.CBSConfidence?.map((item) => (
                             <GaugeChart
                                 key={item.subquestion_text}
                                 value={Number(item.percentage)}
@@ -158,7 +158,7 @@ const CBSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.CBScomps.map((item) => (
+                                {data.CBScomps?.map((item) => (
                                     <tr key={item.value_text} className="border-b border-gray-300 drop-shadow-sm">
                                         <td className="px-6 py-3 w-full">{item.value_text}</td>
                                     </tr>

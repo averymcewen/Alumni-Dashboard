@@ -414,7 +414,7 @@ function UploadPage() {
                                 >
                                     <option value="">Select a survey</option>
                                     {versions.length > 0 ? (
-                                        versions.map((v) => (
+                                        versions?.map((v) => (
                                             <option
                                                 key={v.survey_version_id}
                                                 value={String(v.survey_version_id)}

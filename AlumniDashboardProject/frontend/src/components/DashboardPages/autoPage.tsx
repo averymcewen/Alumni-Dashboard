@@ -62,11 +62,11 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
 
 
     const AUTOIndustry = {
-        labels: data.AUTOIndustry.map(item => item.value_text),
+        labels: data.AUTOIndustry?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.AUTOIndustry.map(item => item.percentage),
+                data: data.AUTOIndustry?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -80,9 +80,9 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
 
         return {
             ...AUTOIndustry,
-            datasets: AUTOIndustry.datasets.map((ds: any) => ({
+            datasets: AUTOIndustry.datasets?.map((ds: any) => ({
                 ...ds,
-                backgroundColor: AUTOIndustry.labels.map(
+                backgroundColor: AUTOIndustry.labels?.map(
                     (_: string, idx: number) => colors[idx % colors.length]
                 ),
                 borderWidth: 0,
@@ -105,7 +105,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -141,7 +141,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                 <ChartCard
                     title="Student Confidence in Pursuing Certification Post-Graduation">
                     <div className="space-y-3 min-w-full ">
-                        {data.AUTOCert.map((item) => {
+                        {data.AUTOCert?.map((item) => {
                             return (
                                 <div
                                     key={item.value_text}
@@ -182,7 +182,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
 
                         <div className="flex items-center gap-8">
                             <ul className="flex flex-col gap-3 shrink-0 w-100 align-center pl-25">
-                                {AUTOIndustry.labels.map((labelHours: string, idx: number) => (
+                                {AUTOIndustry.labels?.map((labelHours: string, idx: number) => (
                                     <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"

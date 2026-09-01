@@ -3,61 +3,57 @@ import { Save, Upload, Download, RefreshCw, Shield, UserCog, Database } from 'lu
 
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
-  
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
-      
+
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex border-b border-gray-200">
           <button
-            className={`px-4 py-4 text-sm font-medium ${
-              activeTab === 'general'
+            className={`px-4 py-4 text-sm font-medium ${activeTab === 'general'
                 ? 'bg-white text-blue-600 border-b-2 border-blue-500'
                 : 'bg-gray-50 text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
             onClick={() => setActiveTab('general')}
           >
             General
           </button>
           <button
-            className={`px-4 py-4 text-sm font-medium ${
-              activeTab === 'data'
+            className={`px-4 py-4 text-sm font-medium ${activeTab === 'data'
                 ? 'bg-white text-blue-600 border-b-2 border-blue-500'
                 : 'bg-gray-50 text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
             onClick={() => setActiveTab('data')}
           >
             Data Management
           </button>
           <button
-            className={`px-4 py-4 text-sm font-medium ${
-              activeTab === 'users'
+            className={`px-4 py-4 text-sm font-medium ${activeTab === 'users'
                 ? 'bg-white text-blue-600 border-b-2 border-blue-500'
                 : 'bg-gray-50 text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
             onClick={() => setActiveTab('users')}
           >
             User Access
           </button>
           <button
-            className={`px-4 py-4 text-sm font-medium ${
-              activeTab === 'security'
+            className={`px-4 py-4 text-sm font-medium ${activeTab === 'security'
                 ? 'bg-white text-blue-600 border-b-2 border-blue-500'
                 : 'bg-gray-50 text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
             onClick={() => setActiveTab('security')}
           >
             Security
           </button>
         </div>
-        
+
         <div className="p-6">
           {/* General Settings */}
           {activeTab === 'general' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-800">General Settings</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -69,7 +65,7 @@ export const Settings: React.FC = () => {
                     defaultValue="Alumni Management System"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Institution Name
@@ -80,7 +76,7 @@ export const Settings: React.FC = () => {
                     defaultValue="University Name"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Contact Email
@@ -91,7 +87,7 @@ export const Settings: React.FC = () => {
                     defaultValue="alumni@university.edu"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Default Time Zone
@@ -109,7 +105,7 @@ export const Settings: React.FC = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div className="pt-4 border-t border-gray-200">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                   <Save size={18} className="mr-2" />
@@ -118,12 +114,12 @@ export const Settings: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {/* Data Management */}
           {activeTab === 'data' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-800">Data Management</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                   <div className="flex items-center mb-4">
@@ -137,7 +133,7 @@ export const Settings: React.FC = () => {
                     Upload Files
                   </button>
                 </div>
-                
+
                 <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                   <div className="flex items-center mb-4">
                     <Download size={24} className="text-blue-600 mr-3" />
@@ -151,7 +147,7 @@ export const Settings: React.FC = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <div className="flex items-center mb-4">
                   <Database size={24} className="text-blue-600 mr-3" />
@@ -172,7 +168,7 @@ export const Settings: React.FC = () => {
                       Enable automatic daily backups of the database
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Backup Frequency
@@ -186,13 +182,13 @@ export const Settings: React.FC = () => {
                       <option value="monthly">Monthly</option>
                     </select>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                       <Database size={18} className="mr-2" />
                       Run Backup Now
                     </button>
-                    
+
                     <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
                       <RefreshCw size={18} className="mr-2" />
                       Restore from Backup
@@ -202,12 +198,12 @@ export const Settings: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {/* User Access */}
           {activeTab === 'users' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-800">User Access Management</h3>
-              
+
               <div className="flex justify-between items-center">
                 <div>
                   <h4 className="text-sm font-medium text-gray-700">Active Users: 8</h4>
@@ -216,7 +212,7 @@ export const Settings: React.FC = () => {
                   Add New User
                 </button>
               </div>
-              
+
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -243,12 +239,12 @@ export const Settings: React.FC = () => {
                       { id: 1, name: 'John Doe', email: 'john.doe@example.com', role: 'Administrator', status: 'Active' },
                       { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', role: 'Manager', status: 'Active' },
                       { id: 3, name: 'Robert Johnson', email: 'robert.johnson@example.com', role: 'Viewer', status: 'Inactive' },
-                    ].map((user) => (
+                    ]?.map((user) => (
                       <tr key={user.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                              {user.name.split(' ').map(n => n[0]).join('')}
+                              {user.name.split(' ')?.map(n => n[0]).join('')}
                             </div>
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
@@ -261,18 +257,16 @@ export const Settings: React.FC = () => {
                           {user.email}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.role === 'Administrator' ? 'bg-purple-100 text-purple-800' : 
-                            user.role === 'Manager' ? 'bg-blue-100 text-blue-800' : 
-                            'bg-gray-100 text-gray-800'
-                          }`}>
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'Administrator' ? 'bg-purple-100 text-purple-800' :
+                              user.role === 'Manager' ? 'bg-blue-100 text-blue-800' :
+                                'bg-gray-100 text-gray-800'
+                            }`}>
                             {user.role}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
                             {user.status}
                           </span>
                         </td>
@@ -289,13 +283,13 @@ export const Settings: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-              
+
               <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <div className="flex items-center mb-4">
                   <UserCog size={24} className="text-blue-600 mr-3" />
                   <h4 className="text-lg font-medium text-gray-800">Role Permissions</h4>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -313,7 +307,7 @@ export const Settings: React.FC = () => {
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Manage Settings</span>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Manager
@@ -328,7 +322,7 @@ export const Settings: React.FC = () => {
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Delete</span>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Viewer
@@ -344,18 +338,18 @@ export const Settings: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {/* Security */}
           {activeTab === 'security' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-800">Security Settings</h3>
-              
+
               <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <div className="flex items-center mb-4">
                   <Shield size={24} className="text-blue-600 mr-3" />
                   <h4 className="text-lg font-medium text-gray-800">Password Policy</h4>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-2">
@@ -371,7 +365,7 @@ export const Settings: React.FC = () => {
                       Passwords must include uppercase, lowercase, numbers, and special characters
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Minimum Password Length
@@ -386,7 +380,7 @@ export const Settings: React.FC = () => {
                       <option value="14">14 characters</option>
                     </select>
                   </div>
-                  
+
                   <div>
                     <div className="flex justify-between mb-2">
                       <label className="block text-sm font-medium text-gray-700">
@@ -401,7 +395,7 @@ export const Settings: React.FC = () => {
                       Force password change after a certain period
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Password Expiry Period
@@ -418,13 +412,13 @@ export const Settings: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <div className="flex items-center mb-4">
                   <Shield size={24} className="text-blue-600 mr-3" />
                   <h4 className="text-lg font-medium text-gray-800">Two-Factor Authentication</h4>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-2">
@@ -440,7 +434,7 @@ export const Settings: React.FC = () => {
                       Require 2FA for all user accounts
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       2FA Method
@@ -456,7 +450,7 @@ export const Settings: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="pt-4 border-t border-gray-200">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                   <Save size={18} className="mr-2" />

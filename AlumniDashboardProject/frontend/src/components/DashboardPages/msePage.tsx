@@ -62,11 +62,11 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
 
     const MSEFactors = {
-        labels: data.MSEFactors.map(item => item.value_text),
+        labels: data.MSEFactors?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.MSEFactors.map(item => item.percentage),
+                data: data.MSEFactors?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -80,9 +80,9 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
 
         return {
             ...MSEFactors,
-            datasets: MSEFactors.datasets.map((ds: any) => ({
+            datasets: MSEFactors.datasets?.map((ds: any) => ({
                 ...ds,
-                backgroundColor: MSEFactors.labels.map(
+                backgroundColor: MSEFactors.labels?.map(
                     (_: string, idx: number) => colors[idx % colors.length]
                 ),
                 borderWidth: 0,
@@ -117,11 +117,11 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
     };
 
     const MSEFactorsBarData = {
-        labels: data.MSEFactors.map(item => item.value_text),
+        labels: data.MSEFactors?.map(item => item.value_text),
         datasets: [
             {
                 label: 'Percent of Alumni',
-                data: data.MSEFactors.map(item => item.percentage),
+                data: data.MSEFactors?.map(item => item.percentage),
                 backgroundColor: '#7a1e96',
                 borderColor: '#4a0066',
                 borderWidth: 2,
@@ -147,7 +147,7 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                 <ChartCard
                     title="Recommendation of Program of Study">
                     <div className="space-y-3 min-w-full ">
-                        {data.getApproval.map((item) => {
+                        {data.getApproval?.map((item) => {
                             return (
                                 <div
                                     key={item.name}
@@ -207,7 +207,7 @@ const MSEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.MSETools.map((item) => (
+                                {data.MSETools?.map((item) => (
                                     <tr key={item.value_text} className="border-b border-gray-300 drop-shadow-sm">
                                         <td className="px-6 py-3 w-full">{item.value_text}</td>
                                     </tr>

@@ -194,7 +194,7 @@ const AlumniEdit: React.FC = () => {
                                 Degrees Awarded
                             </h2>
 
-                            {alumni.degrees?.map((item) =>
+                            {alumni.degrees ??.map((item) =>
                             (
                                 <form >
                                     <div className="grid grid-cols-6 md:grid-cols-6 gap-6">
@@ -392,7 +392,7 @@ const AlumniEdit: React.FC = () => {
                                 Internships
                             </h2>
 
-                            {alumni.internships?.map((item) =>
+                            {alumni.internships ??.map((item) =>
                             (
                                 <form >
                                     <div className="grid grid-cols-6 md:grid-cols-6 gap-6">

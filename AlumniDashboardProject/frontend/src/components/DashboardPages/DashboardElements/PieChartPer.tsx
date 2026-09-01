@@ -44,11 +44,11 @@ const PieChart: React.FC<Props> = ({
             : data;
 
         const buildChart = (rows: Row[]) => ({
-            labels: rows.map(d => d.name),
+            labels: rows?.map(d => d.name),
             datasets: [
                 {
                     label: 'Number of Alumni',
-                    data: rows.map(d => d.numAlum),
+                    data: rows?.map(d => d.numAlum),
                     backgroundColor: colors,
                     borderWidth: 0,
                 },
@@ -72,7 +72,7 @@ const PieChart: React.FC<Props> = ({
             return acc;
         }, {});
 
-        return Object.values(grouped).map(rows => ({
+        return Object.values(grouped)?.map(rows => ({
             title: groupLabelKey ? `${rows[0][groupLabelKey]}` : `Group ${rows[0][groupKey]}`,
             subtitle: `${rows.length} ${itemLabel}${rows.length !== 1 ? 's' : ''}`,
             chartData: buildChart(rows),
@@ -84,12 +84,12 @@ const PieChart: React.FC<Props> = ({
 
     return (
         <>
-            {mappedData.map((d, i) => (
+            {mappedData?.map((d, i) => (
                 <div key={i} className="col-span-1 md:col-span-2 lg:col-span-9">
                     <ChartCard title={d.title} subtitle={d.subtitle}>
                         <div className="flex flex-col lg:flex-row items-center gap-8 w-full min-w-0">
                             <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-48 min-w-0 pl-10">
-                                {d.chartData.labels.map((label: string, idx: number) => (
+                                {d.chartData.labels?.map((label: string, idx: number) => (
                                     <li key={label} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
                                         <span
                                             className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"

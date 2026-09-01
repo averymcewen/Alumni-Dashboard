@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage }) => {
               { id: 'surveys', name: 'Surveys' },
               { id: 'internships', name: 'Internships' },
               { id: 'settings', name: 'Settings' },
-            ].map((item) => (
+            ]?.map((item) => (
               <button
                 key={item.id}
                 className={`block w-full text-left px-3 py-2 rounded-lg ${currentPage === item.id
