@@ -41,10 +41,10 @@ ORDER BY d.department_name;
 `);
 
         const [alumniPerProgram] = await pool.query(`
-     SELECT DISTINCT
+    SELECT DISTINCT
           d.department_id,
           d.department_name,
-          value_text AS name,
+          raw_degree_code AS name,
           COUNT(*) AS numAlum
       FROM alumni_degrees ad
       JOIN program_of_study p
