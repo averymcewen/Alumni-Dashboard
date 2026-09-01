@@ -57,15 +57,25 @@ const Dashboard: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState<Tab>("overview");
 
+    let socRow = null;
+    let autoRow = null;
+    let cbsRow = null;
+    let eceRow = null;
+    let mseRow = null;
+    let meRow = null;
+    let psRow = null;
 
-    // these are used for assigning the correct department per tab
-    const socRow = stats.alumniPerProgram.find(r => r.department_id === 1);
-    const autoRow = stats.alumniPerProgram.find(r => r.department_id === 2);
-    const cbsRow = stats.alumniPerProgram.find(r => r.department_id === 3);
-    const eceRow = stats.alumniPerProgram.find(r => r.department_id === 4);
-    const mseRow = stats.alumniPerProgram.find(r => r.department_id === 5);
-    const meRow = stats.alumniPerProgram.find(r => r.department_id === 6);
-    const psRow = stats.alumniPerProgram.find(r => r.department_id === 7);
+
+    const defineDepartments = async () => {
+        // these are used for assigning the correct department per tab
+        socRow = stats.alumniPerProgram.find(r => r.department_id === 1);
+        autoRow = stats.alumniPerProgram.find(r => r.department_id === 2);
+        cbsRow = stats.alumniPerProgram.find(r => r.department_id === 3);
+        eceRow = stats.alumniPerProgram.find(r => r.department_id === 4);
+        mseRow = stats.alumniPerProgram.find(r => r.department_id === 5);
+        meRow = stats.alumniPerProgram.find(r => r.department_id === 6);
+        psRow = stats.alumniPerProgram.find(r => r.department_id === 7);
+    }
 
     const departmentPages = {
         auto: {
@@ -117,6 +127,8 @@ const Dashboard: React.FC = () => {
 
 
 
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -133,6 +145,7 @@ const Dashboard: React.FC = () => {
         };
 
         fetchData();
+        defineDepartments();
     }, []);
 
 
