@@ -53,7 +53,7 @@ const ECEPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await apiService.getDeptInfo(department_id);
+                const data = await apiService.getDeptInfo(4);
                 setData(data);
 
                 console.log(data);

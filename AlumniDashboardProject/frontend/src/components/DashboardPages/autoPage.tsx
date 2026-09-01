@@ -47,7 +47,7 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await apiService.getDeptInfo(department_id);
+                const data = await apiService.getDeptInfo(2);
                 setData(data);
 
                 console.log(data);
