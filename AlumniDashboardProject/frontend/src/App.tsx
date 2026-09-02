@@ -28,7 +28,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/alumni" element={<AlumniDirectory />} />
-                {/* <Route path="/uploadCSV" element={<UploadPage />} /> */}
+                <Route path="/uploadCSV" element={<UploadPage />} />
                 <Route path="/alumni/:id" element={<AlumniDetail />} />
                 <Route path="/alumni/:id/edit" element={<AlumniEdit />} />
                 {/* <Route path="/adminpage" element={<AdminPage />} /> */}

@@ -434,7 +434,16 @@ router.get("/:id", async (req, res) => {
        join question q
        on r.question_id = q.question_id
        WHERE sa.alumni_id = ?
-       AND q.question_code IN ('plans', 'plans_13_text', 'meaningful', 'two_things', 'two_challenges', 'cw_startbachelors', 'cw_rankeffective', 'cw_easteffective', 'soc_selfpreparedness', 'ps_competions', 'ps_salesmodel', 'me_industries', 'mse_depteqpt', 'eece_progselection', 'cbs_competitions', 'cbs_industskills', 'auto_servicetools', 'auto_industries', 'auto_industries_6_text')
+       AND q.question_code IN ('plans', 'plans_13_text', 'meaningful', 'two_things', 'two_challenges', 'cw_startbachelors%', 'soc_selfpreparedness',
+       'soc_ai',
+       'soc_internship',
+       'cw_speakermentor',
+        'ps_competions', 'ps_salesmodel', 
+        'ps_yrsexp',
+        'me_industries%', 
+        'me_constraints', 'mse_depteqpt',
+        'mse_depteqpt', 'ece_progselection%',
+        'ece_constraints', 'cbs_competitions', 'cbs_industskills%', 'auto_servicetools', 'auto_industries%', 'auto_industries_6_text')
        ORDER BY survey_version_id, sa.survey_attempt_id, q.question_id
        AND
                     CASE r.value_text

@@ -90,7 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             View & Modify Surveys
           </NavLink>
 
-          {/* <NavLink
+          <NavLink
             to="/uploadCSV"
             className={({ isActive }) =>
               `flex items-center px-4 py-3 text-sm rounded-lg mb-1 transition-colors ${isActive
@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             Upload
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/adminpage"
             className={({ isActive }) =>
               `flex items-center px-4 py-3 text-sm rounded-lg mb-1 transition-colors ${isActive
