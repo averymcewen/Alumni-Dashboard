@@ -640,12 +640,12 @@ const AlumniEdit: React.FC = () => {
                             type="button"
                             onClick={handleBack}
                             className="btn btn-secondary"
-                            disabled={saving}
+
                         >
                             Cancel
                         </button>
 
-                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                        <button type="submit" className="btn btn-primary" disabled>
                             {saving ? 'Saving...' : isNew ? 'Create Record' : 'Save Changes'}
                         </button>
                     </div>

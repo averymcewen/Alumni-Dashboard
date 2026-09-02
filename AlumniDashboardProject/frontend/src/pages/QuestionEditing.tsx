@@ -142,8 +142,7 @@ const QuestionPage: React.FC = () => {
                                     ? "border-gray-500 font-semibold"
                                     : "border-gray-300"
                                     }`}
-                                type="submit" disabled={!dataChanged}
-                                onClick={handleSubmit}>Save Changes</button>
+                                type="submit" disabled>Save Changes</button>
                         </div>
                     </div>
 
