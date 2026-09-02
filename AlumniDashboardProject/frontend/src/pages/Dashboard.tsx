@@ -318,7 +318,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {loading ? (
-                <div className="space-y-6">
+                <div className="space-y-6 col-span-full">
                     {/* Stat card row -- its own grid, matching the real 4-card row exactly
             instead of forcing 9 columns to divide evenly into 4 */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
