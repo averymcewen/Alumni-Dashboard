@@ -134,6 +134,7 @@ const OverviewElements: React.FC<Props> = ({
   const hoursChartRef = useRef(null);
   const workExpChartRef = useRef(null);
   const { width } = useWindowSize();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     salaryChartRef.current?.resize();
@@ -173,320 +174,357 @@ const OverviewElements: React.FC<Props> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 gap-6">
-
-      <PieChart
-        data={numPerDepartment}
-        chartOptions={chartOptions}
-        title="Alumni by Department"
-        itemLabel="department"
-      />
-
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard
-          title="Post-Graduation Destination"
-          subtitle="Direction Post Grad per Alumni"
-        >
-          <div className="space-y-3 min-w-full h-full self-start">
-            {postGradData?.map((item) => (
-              <div
-                key={item.destination_group}
-                className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-              >
-                <div className={`flex items-center gap-3 ${postGradData[0].destination_group === item.destination_group && 'font-bold text-lg'}`}>
-                  <span>{item.destination_group}</span>
-                </div>
-                <div>
-                  <span className={`flex items-center gap-3 ${postGradData[0].destination_group === item.destination_group && 'font-bold text-lg'}`}>
-                    {item.pct_of_total} %
-                  </span>
+      {loading ? (
+        <div className="space-y-6">
+          {/* Stat card row -- its own grid, matching the real 4-card row exactly
+            instead of forcing 9 columns to divide evenly into 4 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="card">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <div className="skeleton h-4 w-24"></div>
+                    <div className="skeleton h-7 w-16"></div>
+                  </div>
+                  <div className="skeleton h-12 w-12 rounded-full"></div>
                 </div>
               </div>
             ))}
           </div>
-        </ChartCard>
-      </div>
 
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard
-          title="Career Outlook"
-          subtitle="How alumni describe their career outlook"
-        >
-          <div className="space-y-3 min-w-full">
-            {careerOutlook?.map((item) => {
-              const Icon = weatherIcons[item.value_text] ?? Cloud;
-              return (
+          {/* Chart panel row -- mirrors the real 3x col-span-3 layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="card lg:col-span-3">
+                <div className="skeleton h-5 w-2/3 mb-2"></div>
+                <div className="skeleton h-4 w-1/2 mb-4"></div>
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, j) => (
+                    <div key={j} className="flex items-center justify-between rounded-lg border p-3">
+                      <div className="skeleton h-4 w-24"></div>
+                      <div className="skeleton h-4 w-10"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (<>
+        <PieChart
+          data={numPerDepartment}
+          chartOptions={chartOptions}
+          title="Alumni by Department"
+          itemLabel="department"
+        />
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard
+            title="Post-Graduation Destination"
+            subtitle="Direction Post Grad per Alumni"
+          >
+            <div className="space-y-3 min-w-full h-full self-start">
+              {postGradData?.map((item) => (
+                <div
+                  key={item.destination_group}
+                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                >
+                  <div className={`flex items-center gap-3 ${postGradData[0].destination_group === item.destination_group && 'font-bold text-lg'}`}>
+                    <span>{item.destination_group}</span>
+                  </div>
+                  <div>
+                    <span className={`flex items-center gap-3 ${postGradData[0].destination_group === item.destination_group && 'font-bold text-lg'}`}>
+                      {item.pct_of_total} %
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard
+            title="Career Outlook"
+            subtitle="How alumni describe their career outlook"
+          >
+            <div className="space-y-3 min-w-full">
+              {careerOutlook?.map((item) => {
+                const Icon = weatherIcons[item.value_text] ?? Cloud;
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-6 h-6 text-yellow-500" />
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className="font-semibold">{item.numAnswers} %</span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard title="Primary Class Format">
+            <div className="space-y-3 min-w-full h-full self-start">
+              {primaryClassformat?.map((item) => (
                 <div
                   key={item.value_text}
                   className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="w-6 h-6 text-yellow-500" />
                     <span>{item.value_text}</span>
                   </div>
-                  <span className="font-semibold">{item.numAnswers} %</span>
+                  <span className="font-semibold">{item.percentage} %</span>
                 </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard title="Primary Class Format">
-          <div className="space-y-3 min-w-full h-full self-start">
-            {primaryClassformat?.map((item) => (
-              <div
-                key={item.value_text}
-                className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-              >
-                <div className="flex items-center gap-3">
-                  <span>{item.value_text}</span>
-                </div>
-                <span className="font-semibold">{item.percentage} %</span>
-              </div>
-            ))}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-9">
-        <ChartCard
-          title="Average Salary Range"
-          subtitle="Average Reported Salary of Post-Graduation Employment"
-        >
-          <div className="flex flex-col sm:flex-row items-center gap-8">
-            <ul className="flex flex-col pl-0 sm:pl-0 gap-3 shrink-0 w-full sm:w-auto sm:min-w-40">
-              {averageSalaryPerTerm.labels?.map((label: string, idx: number) => (
-                <li key={label} className="flex items-center gap-2 text-sm text-gray-700">
-                  <span
-                    className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                    style={{ backgroundColor: colors[idx % colors?.length] }}
-                  />
-                  <span>{label}</span>
-                </li>
               ))}
-            </ul>
-
-            <div className="relative w-full h-64 sm:h-80 flex-1">
-              <Doughnut ref={salaryChartRef} options={donutOptions} data={coloredSalaryData} />
             </div>
-          </div>
-        </ChartCard>
-      </div>
+          </ChartCard>
+        </div>
 
-      <div className="sm:col-span-2 lg:col-span-6">
-        <ChartCard title="Top 5 Employers post-graduation">
-          <div className="space-y-3 min-w-full self-start">
-            {top5Employers?.map((item) => {
-              const isTopTied = item.numAlum === top5Employers[0]?.numAlum;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
-                <div
-                  key={item.value_text}
-                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                >
-                  <div className={`flex items-center gap-3 ${highlightClass}`}>
-                    <span>{item.value_text}</span>
-                  </div>
-                  <span className={`flex items-center gap-3 ${highlightClass}`}>
-                    {item.numAlum}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard title="Employer by County">
-          <div className="space-y-3 min-w-full self-start">
-            {employerByCounty?.map((item) => {
-              const isTopTied = item.numAlum === employerByCounty[0]?.numAlum;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
-                <div
-                  key={item.value_text}
-                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                >
-                  <div className={`flex items-center gap-3 ${highlightClass}`}>
-                    <span>{item.value_text}</span>
-                  </div>
-                  <span className={`flex items-center gap-3 ${highlightClass}`}>
-                    {item.numAlum}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-6">
-        <ChartCard title="Top 5 Internship Companies">
-          <div className="space-y-3 min-w-full self-start">
-            {top5InternshipCo?.map((item) => {
-              const isTopTied = item.numAlum === top5InternshipCo[0]?.numAlum;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
-                <div
-                  key={item.value_text}
-                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                >
-                  <div className={`flex items-center gap-3 ${highlightClass}`}>
-                    <span>{item.value_text}</span>
-                  </div>
-                  <span className={`flex items-center gap-3 ${highlightClass}`}>
-                    {item.numAlum}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard title="Internship Locations">
-          <div className="space-y-3 min-w-full self-start">
-            {internshipByLocation?.map((item) => {
-              const isTopTied = item.numAlum === internshipByLocation[0]?.numAlum;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
-                <div
-                  key={item.value_text}
-                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                >
-                  <div className={`flex items-center gap-3 ${highlightClass}`}>
-                    <span>{item.value_text}</span>
-                  </div>
-                  <span className={`flex items-center gap-3 ${highlightClass}`}>
-                    {item.numAlum}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-9">
-        <ChartCard title="Recommendation of Program of Study">
-          <div className="space-y-3 min-w-full">
-            {programOfStudyApproval?.map((item) => {
-              const isTopTied = item.percentage === programOfStudyApproval[0]?.percentage;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
-                <div
-                  key={item.value_text}
-                  className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                >
-                  <div className={`flex items-center gap-3 ${highlightClass}`}>
-                    <span>{item.value_text}</span>
-                  </div>
-                  <span className={`flex items-center gap-3 ${highlightClass}`}>
-                    {item.percentage} %
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-9">
-        <ChartCard title="Program of Study Recommended Improvements">
-          <div className="space-y-3 min-w-full h-full self-start">
-            {programOfStudyImprovements?.map((item) => (
-              <div
-                key={item.value_text}
-                className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
-              >
-                <div className="font-semibold">
-                  <span>{item.value_text}</span>
-                </div>
-                <span className="font-semibold pl-15 text-nowrap">{item.percentage} %</span>
-              </div>
-            ))}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-3">
-        <ChartCard title="Top 5 Grad Schools" subtitle="Where Our Grads Are Going Next">
-          <div className="space-y-3 min-w-full h-full self-start">
-            {gradSchoolData?.map((item) => (
-              <div
-                key={item.value_text}
-                className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
-              >
-                <div className="gap-3">
-                  <span>{item.value_text}</span>
-                </div>
-                <span className="font-semibold">{item.numStudentsPerSchool} Alumni</span>
-              </div>
-            ))}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="sm:col-span-2 lg:col-span-6">
-        <ChartCard title="Hours Worked During Program Completion">
-          <div className="space-y-3 min-w-full h-full self-start">
-            <div className="flex flex-col lg:flex-row items-center gap-6">
-              <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40">
-                {hoursWorked.labels?.map((labelHours: string, idx: number) => (
-                  <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
+        <div className="sm:col-span-2 lg:col-span-9">
+          <ChartCard
+            title="Average Salary Range"
+            subtitle="Average Reported Salary of Post-Graduation Employment"
+          >
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <ul className="flex flex-col pl-0 sm:pl-0 gap-3 shrink-0 w-full sm:w-auto sm:min-w-40">
+                {averageSalaryPerTerm.labels?.map((label: string, idx: number) => (
+                  <li key={label} className="flex items-center gap-2 text-sm text-gray-700">
                     <span
                       className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
                       style={{ backgroundColor: colors[idx % colors?.length] }}
                     />
-                    <span>{labelHours}</span>
+                    <span>{label}</span>
                   </li>
                 ))}
               </ul>
 
-              <div className="relative w-full h-64 lg:h-80 flex-1">
-                <Doughnut ref={hoursChartRef} options={donutOptions} data={coloredHours} />
+              <div className="relative w-full h-64 sm:h-80 flex-1">
+                <Doughnut ref={salaryChartRef} options={donutOptions} data={coloredSalaryData} />
               </div>
             </div>
-          </div>
-        </ChartCard>
-      </div>
+          </ChartCard>
+        </div>
 
-      <div className="col-span-1 sm:col-span-2 lg:col-span-4">
-        <ChartCard title="Graduate Degrees to be Pursued">
-          <div className="space-y-3 min-w-full h-full self-start">
-            {gradDegreePursue?.map((item) => {
-              const isTopTied = item.percentage === gradDegreePursue[0]?.percentage;
-              const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-              return (
+        <div className="sm:col-span-2 lg:col-span-6">
+          <ChartCard title="Top 5 Employers post-graduation">
+            <div className="space-y-3 min-w-full self-start">
+              {top5Employers?.map((item) => {
+                const isTopTied = item.numAlum === top5Employers[0]?.numAlum;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`flex items-center gap-3 ${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`flex items-center gap-3 ${highlightClass}`}>
+                      {item.numAlum}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard title="Employer by County">
+            <div className="space-y-3 min-w-full self-start">
+              {employerByCounty?.map((item) => {
+                const isTopTied = item.numAlum === employerByCounty[0]?.numAlum;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`flex items-center gap-3 ${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`flex items-center gap-3 ${highlightClass}`}>
+                      {item.numAlum}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-6">
+          <ChartCard title="Top 5 Internship Companies">
+            <div className="space-y-3 min-w-full self-start">
+              {top5InternshipCo?.map((item) => {
+                const isTopTied = item.numAlum === top5InternshipCo[0]?.numAlum;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`flex items-center gap-3 ${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`flex items-center gap-3 ${highlightClass}`}>
+                      {item.numAlum}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard title="Internship Locations">
+            <div className="space-y-3 min-w-full self-start">
+              {internshipByLocation?.map((item) => {
+                const isTopTied = item.numAlum === internshipByLocation[0]?.numAlum;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`flex items-center gap-3 ${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`flex items-center gap-3 ${highlightClass}`}>
+                      {item.numAlum}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-9">
+          <ChartCard title="Recommendation of Program of Study">
+            <div className="space-y-3 min-w-full">
+              {programOfStudyApproval?.map((item) => {
+                const isTopTied = item.percentage === programOfStudyApproval[0]?.percentage;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`flex items-center gap-3 ${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`flex items-center gap-3 ${highlightClass}`}>
+                      {item.percentage} %
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-9">
+          <ChartCard title="Program of Study Recommended Improvements">
+            <div className="space-y-3 min-w-full h-full self-start">
+              {programOfStudyImprovements?.map((item) => (
                 <div
                   key={item.value_text}
-                  className="flex items-end justify-between rounded-lg border p-3 pl-8 pr-8"
+                  className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
                 >
-                  <div className={`${highlightClass}`}>
+                  <div className="font-semibold">
                     <span>{item.value_text}</span>
                   </div>
-                  <span className={`font-semibold pl-4 text-nowrap ${highlightClass}`}>
-                    {item.percentage} %
-                  </span>
+                  <span className="font-semibold pl-15 text-nowrap">{item.percentage} %</span>
                 </div>
-              );
-            })}
-          </div>
-        </ChartCard>
-      </div>
-
-      <div className="col-span-1 sm:col-span-2 lg:col-span-5">
-        <ChartCard title="Work Experience Related to Field of Study">
-          <div className="space-y-3 min-w-full h-full self-start">
-            <div className="relative w-full h-64 sm:h-72">
-              <Bar ref={workExpChartRef} data={workExperience} options={barChartOptions} />
+              ))}
             </div>
-          </div>
-        </ChartCard>
-      </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3">
+          <ChartCard title="Top 5 Grad Schools" subtitle="Where Our Grads Are Going Next">
+            <div className="space-y-3 min-w-full h-full self-start">
+              {gradSchoolData?.map((item) => (
+                <div
+                  key={item.value_text}
+                  className="flex items-start justify-between rounded-lg border p-3 pl-8 pr-8"
+                >
+                  <div className="gap-3">
+                    <span>{item.value_text}</span>
+                  </div>
+                  <span className="font-semibold">{item.numStudentsPerSchool} Alumni</span>
+                </div>
+              ))}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-6">
+          <ChartCard title="Hours Worked During Program Completion">
+            <div className="space-y-3 min-w-full h-full self-start">
+              <div className="flex flex-col lg:flex-row items-center gap-6">
+                <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40">
+                  {hoursWorked.labels?.map((labelHours: string, idx: number) => (
+                    <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700">
+                      <span
+                        className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
+                        style={{ backgroundColor: colors[idx % colors?.length] }}
+                      />
+                      <span>{labelHours}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="relative w-full h-64 lg:h-80 flex-1">
+                  <Doughnut ref={hoursChartRef} options={donutOptions} data={coloredHours} />
+                </div>
+              </div>
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+          <ChartCard title="Graduate Degrees to be Pursued">
+            <div className="space-y-3 min-w-full h-full self-start">
+              {gradDegreePursue?.map((item) => {
+                const isTopTied = item.percentage === gradDegreePursue[0]?.percentage;
+                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                return (
+                  <div
+                    key={item.value_text}
+                    className="flex items-end justify-between rounded-lg border p-3 pl-8 pr-8"
+                  >
+                    <div className={`${highlightClass}`}>
+                      <span>{item.value_text}</span>
+                    </div>
+                    <span className={`font-semibold pl-4 text-nowrap ${highlightClass}`}>
+                      {item.percentage} %
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        <div className="col-span-1 sm:col-span-2 lg:col-span-5">
+          <ChartCard title="Work Experience Related to Field of Study">
+            <div className="space-y-3 min-w-full h-full self-start">
+              <div className="relative w-full h-64 sm:h-72">
+                <Bar ref={workExpChartRef} data={workExperience} options={barChartOptions} />
+              </div>
+            </div>
+          </ChartCard>
+        </div>
+      </>)}
 
     </div>
   )

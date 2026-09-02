@@ -102,18 +102,43 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
         <div className="grid grid-cols-9 gap-6 mb-8">
 
 
-            {loading ? (<div className="animate-pulse space-y-6">
-                <div className="grid grid-cols-9 gap-6">
-                    {[...Array(4)]?.map((_, i) => (
-                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
-                    ))}
+            {loading ? (
+                <div className="space-y-6">
+                    {/* Stat card row -- its own grid, matching the real 4-card row exactly
+            instead of forcing 9 columns to divide evenly into 4 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[...Array(4)].map((_, i) => (
+                            <div key={i} className="card">
+                                <div className="flex items-start justify-between">
+                                    <div className="space-y-2">
+                                        <div className="skeleton h-4 w-24"></div>
+                                        <div className="skeleton h-7 w-16"></div>
+                                    </div>
+                                    <div className="skeleton h-12 w-12 rounded-full"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Chart panel row -- mirrors the real 3x col-span-3 layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="card lg:col-span-3">
+                                <div className="skeleton h-5 w-2/3 mb-2"></div>
+                                <div className="skeleton h-4 w-1/2 mb-4"></div>
+                                <div className="space-y-3">
+                                    {[...Array(4)].map((_, j) => (
+                                        <div key={j} className="flex items-center justify-between rounded-lg border p-3">
+                                            <div className="skeleton h-4 w-24"></div>
+                                            <div className="skeleton h-4 w-10"></div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
-                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
-                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
-                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
-                </div>
-            </div>) : (
+            ) : (
                 <>
                     <PieChart
                         data={numPerProgram}
