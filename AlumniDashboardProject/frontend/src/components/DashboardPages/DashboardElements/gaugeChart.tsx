@@ -3,11 +3,13 @@ import { Doughnut } from "react-chartjs-2";
 
 const GaugeChart = ({
     value,
+    maxNum,
     label,
     isPercent,
     hoverLabel
 }: {
     value: number;
+    maxNum?: number;
     label: string;
     isPercent?: boolean;
     hoverLabel?: string;
@@ -18,7 +20,7 @@ const GaugeChart = ({
         datasets: [
             {
                 label: hoverLabel ? hoverLabel : "",
-                data: [value, 5 - value],
+                data: [value, maxNum - value],
                 backgroundColor: ['#7a1e96', '#e5e7eb'],
                 borderWidth: 0,
                 circumference: 180,

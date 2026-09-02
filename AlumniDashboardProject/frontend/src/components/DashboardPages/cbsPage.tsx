@@ -184,6 +184,7 @@ const CBSPage: React.FC<Props> = ({ numPerProgram, department_id, departmentName
                                     <GaugeChart
                                         key={item.subquestion_text}
                                         value={Number(item.percentage)}
+                                        maxNum={100}
                                         label={item.value_text.split(/[-:]/)[0].trim()}
                                         isPercent={true} />
                                 ))}

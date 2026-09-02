@@ -385,6 +385,7 @@ const EastInsights: React.FC = ({ }) => {
                                     <GaugeChart
                                         key={item.subquestion_text}
                                         value={Number(item.average)}
+                                        maxNum={5}
                                         label={item.subquestion_text}
                                         hoverLabel={"TEST"}
                                     />
