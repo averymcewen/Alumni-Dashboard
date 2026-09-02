@@ -40,6 +40,8 @@ const GradPrograms: React.FC = ({
         gradschoolEffective: []
     });
 
+
+
     const stackedBarChartOptions = {
         type: 'bar',
         indexAxis: 'y' as const,
@@ -115,92 +117,106 @@ const GradPrograms: React.FC = ({
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 gap-6">
 
+            {loading ? (<div className="animate-pulse space-y-6">
+                <div className="grid grid-cols-9 gap-6">
+                    {[...Array(4)]?.map((_, i) => (
+                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                </div>
+            </div>) : (
+                <><div className="col-span-1 md:col-span-1 lg:col-span-5">
+                    <ChartCard
+                        title="Overall Quality of Graduate Education from EAST">
 
-            <div className="col-span-1 md:col-span-1 lg:col-span-5">
-                <ChartCard
-                    title="Overall Quality of Graduate Education from EAST">
+                        <div className="space-y-3 min-w-full pl-20 pr-20 self-start">
+                            {data.overallQuality?.map((item) => {
+                                const maxNumAlum = data.overallQuality[0]?.percentage;
+                                const isTopTied = item.percentage === maxNumAlum;
+                                const highlightClass = isTopTied ? 'font-bold text-lg' : '';
 
-                    <div className="space-y-3 min-w-full pl-20 pr-20 self-start">
-                        {data.overallQuality?.map((item) => {
-                            const maxNumAlum = data.overallQuality[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                                return (
+                                    <div className="flex items-end justify-between rounded-lg border p-3 pl-8 pr-8">
+                                        <div className={`${highlightClass}`}>{item.value_text}</div>
+                                        <div className={`${highlightClass}`}>{item.percentage} %</div>
 
-                            return (
-                                <div className="flex items-end justify-between rounded-lg border p-3 pl-8 pr-8">
-                                    <div className={`${highlightClass}`}>{item.value_text}</div>
-                                    <div className={`${highlightClass}`}>{item.percentage} %</div>
+                                    </div>
+                                )
+                            })}
 
-                                </div>
-                            )
-                        })}
+                        </div>
 
+                    </ChartCard>
+
+                </div>
+
+                    <div className="col-span-1 md:col-span-1 lg:col-span-4">
+                        <ChartCard
+                            title="Graduate Program Recommended"
+                        >
+                            <div className=" gap-6 justify-items-center justify-center">
+                                {data.gradSchoolRecommend?.map((item) => (
+                                    <PercentageDial
+                                        key={item.subquestion_text}
+                                        value={Number(item.percentage)}
+                                        label={item.question_text}
+                                    />
+                                ))}
+                            </div>
+                        </ChartCard>
                     </div>
 
-                </ChartCard>
 
-            </div>
+                    <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                        <ChartCard
+                            title="Graduate Program Effectiveness">
+                            <div className="space-y-3 min-w-full h-full self-start">
 
-            <div className="col-span-1 md:col-span-1 lg:col-span-4">
-                <ChartCard
-                    title="Graduate Program Recommended"
-                >
-                    <div className=" gap-6 justify-items-center justify-center">
-                        {data.gradSchoolRecommend?.map((item) => (
-                            <PercentageDial
-                                key={item.subquestion_text}
-                                value={Number(item.percentage)}
-                                label={item.question_text}
-                            />
-                        ))}
-                    </div>
-                </ChartCard>
-            </div>
-
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Graduate Program Effectiveness">
-                    <div className="space-y-3 min-w-full h-full self-start">
-
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead >
-                                <tr >
-                                    <th className="px-6 py-3 ">Factor</th>
-                                    <th className="px-6 py-6 text-nowrap">Very Effective</th>
-                                    <th className="px-6 py-3">Extremely Effective</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.gradschoolEffective?.map((item) => {
-                                    console.log("item value is: " + item.value_text);
-
-                                    return (
-
-
-                                        <tr className="items-center" key={item.value_text}>
-                                            <td
-                                                className="px-6 py-3 "
-                                            ><span>{item.subquestion_text}</span></td>
-                                            <td className="text-center px-6 py-3 text-nowrap"><span>{item.very_effective_pct} %</span></td>
-                                            <td className="text-center px-6 py-3"><span>{item.extreme_effective_pct} %</span></td>
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead >
+                                        <tr >
+                                            <th className="px-6 py-3 ">Factor</th>
+                                            <th className="px-6 py-6 text-nowrap">Very Effective</th>
+                                            <th className="px-6 py-3">Extremely Effective</th>
                                         </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.gradschoolEffective?.map((item) => {
+                                            console.log("item value is: " + item.value_text);
+
+                                            return (
 
 
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                                <tr className="items-center" key={item.value_text}>
+                                                    <td
+                                                        className="px-6 py-3 "
+                                                    ><span>{item.subquestion_text}</span></td>
+                                                    <td className="text-center px-6 py-3 text-nowrap"><span>{item.very_effective_pct} %</span></td>
+                                                    <td className="text-center px-6 py-3"><span>{item.extreme_effective_pct} %</span></td>
+                                                </tr>
+
+
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Why Students Chose EAST">
-                    <Bar options={stackedBarChartOptions} data={barData} />
-                </ChartCard>
-            </div>
+                    <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                        <ChartCard
+                            title="Why Students Chose EAST">
+                            <Bar options={stackedBarChartOptions} data={barData} />
+                        </ChartCard>
+                    </div></>)}
+
+
+
         </div>
     )
 }

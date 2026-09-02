@@ -255,204 +255,217 @@ const EastInsights: React.FC = ({ }) => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 gap-6">
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Student Insight on EAST Programs">
-                    <div className="w-full overflow-x-auto">
-                        <Bar options={stackedBarChartOptions} data={barData} />
-                    </div>
-                </ChartCard>
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Student Ranking of EAST Effectiveness">
-                    <div className="space-y-3 min-w-full h-full self-start overflow-x-auto">
-
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead >
-                                <tr >
-                                    <th className="px-6 py-3 ">Factor</th>
-                                    <th className="px-6 py-6 text-nowrap">1st</th>
-                                    {/* <th className="px-6 py-3 ">2nd</th>
-                                    <th className="px-6 py-3 ">3rd</th> */}
-                                    <th className="px-6 py-3">Percent ranked "Extremely Efficient"</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.topEffectiveFactors?.map((item) => {
-                                    return (
-                                        <tr className="items-center" key={item.value_text}>
-                                            <td
-                                                className="px-6 py-3 "
-                                            ><span>{item.subquestion_text}</span></td>
-                                            <td className="text-center px-6 py-3 text-nowrap"><span>{item.rank1_pct} %</span></td>
-                                            <td className="text-center px-6 py-3"><span>{item.extremely_effective_pct} %</span></td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </ChartCard>
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-5">
-                <ChartCard
-                    title="Student's Top 3 Important Factors"
-                >
-                    <div className="space-y-3 min-w-full h-full self-start overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead >
-                                <tr >
-                                    <th className="px-6 py-3 ">Factor</th>
-                                    <th className="px-6 py-3 ">Percent of Respondents</th>
-                                    <th className="px-6 py-3 ">Total times chosen in top 3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.rankEffective?.map((item) => {
-                                    return (
-                                        <tr className="items-center" key={item.value_text}>
-                                            <td
-                                                className="px-6 py-3 "
-                                            ><span>{item.subquestion_text}</span></td>
-                                            <td className="text-center px-6 py-3"><span>{item.pctOfRespondents} %</span></td>
-                                            <td className="text-center px-6 py-3"><span>{item.timesChosenInTop3}</span></td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </ChartCard>
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-4 ">
-                <ChartCard
-                    title="Utilized EAST Services">
-                    <div className="relative w-full h-64 sm:h-80">
-                        <Bar
-                            data={eastStudentServicesBar}
-                            options={eastStudentServicesOptions} />
-                    </div>
-                </ChartCard>
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Student Confidence"
-                >
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {data.studentConfidence?.map((item) => (
-                            <GaugeChart
-                                key={item.subquestion_text}
-                                value={Number(item.average)}
-                                label={item.subquestion_text}
-                                hoverLabel={"TEST"}
-                            />
-                        ))}
-                    </div>
-                </ChartCard>
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-9">
-                <ChartCard
-                    title="Utilized Engaged Learning Experiences by Percent"
-                >
-                    <div className="space-y-3 min-w-full h-full self-start">
-                        <div className="flex flex-col lg:flex-row items-center gap-8 w-full min-w-0">
-                            <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40 lg:pl-25 min-w-0">
-                                {engagedLearning.labels?.map((labelHours: string, idx: number) => (
-                                    <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
-                                        <span
-                                            className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
-                                            style={{ backgroundColor: colors[idx % colors?.length] }}
-                                        />
-                                        <span className="truncate">{labelHours}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="relative w-full h-64 lg:h-80 flex-1 min-w-0">
-                                <Pie
-                                    options={pieOptions}
-                                    data={coloredLearningExperiences}
-                                />
-                            </div>
+            {loading ? (<div className="animate-pulse space-y-6">
+                <div className="grid grid-cols-9 gap-6">
+                    {[...Array(4)]?.map((_, i) => (
+                        <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                </div>
+            </div>) : (
+                <> <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                    <ChartCard
+                        title="Student Insight on EAST Programs">
+                        <div className="w-full overflow-x-auto">
+                            <Bar options={stackedBarChartOptions} data={barData} />
                         </div>
+                    </ChartCard>
+                </div>
+
+                    <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                        <ChartCard
+                            title="Student Ranking of EAST Effectiveness">
+                            <div className="space-y-3 min-w-full h-full self-start overflow-x-auto">
+
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead >
+                                        <tr >
+                                            <th className="px-6 py-3 ">Factor</th>
+                                            <th className="px-6 py-6 text-nowrap">1st</th>
+                                            {/* <th className="px-6 py-3 ">2nd</th>
+                                    <th className="px-6 py-3 ">3rd</th> */}
+                                            <th className="px-6 py-3">Percent ranked "Extremely Efficient"</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.topEffectiveFactors?.map((item) => {
+                                            return (
+                                                <tr className="items-center" key={item.value_text}>
+                                                    <td
+                                                        className="px-6 py-3 "
+                                                    ><span>{item.subquestion_text}</span></td>
+                                                    <td className="text-center px-6 py-3 text-nowrap"><span>{item.rank1_pct} %</span></td>
+                                                    <td className="text-center px-6 py-3"><span>{item.extremely_effective_pct} %</span></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                <ChartCard
-                    title="Gender"
-                >
-                    <div className="space-y-3 min-w-full ">
-                        {data.gender?.map((item) => {
-                            const maxNumAlum = data.gender[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+                    <div className="col-span-1 md:col-span-2 lg:col-span-5">
+                        <ChartCard
+                            title="Student's Top 3 Important Factors"
+                        >
+                            <div className="space-y-3 min-w-full h-full self-start overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead >
+                                        <tr >
+                                            <th className="px-6 py-3 ">Factor</th>
+                                            <th className="px-6 py-3 ">Percent of Respondents</th>
+                                            <th className="px-6 py-3 ">Total times chosen in top 3</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.rankEffective?.map((item) => {
+                                            return (
+                                                <tr className="items-center" key={item.value_text}>
+                                                    <td
+                                                        className="px-6 py-3 "
+                                                    ><span>{item.subquestion_text}</span></td>
+                                                    <td className="text-center px-6 py-3"><span>{item.pctOfRespondents} %</span></td>
+                                                    <td className="text-center px-6 py-3"><span>{item.timesChosenInTop3}</span></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ChartCard>
+                    </div>
 
-                            return (
-                                <div
-                                    key={item.value_text}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
-                                    <div className={`flex items-center gap-3 ${highlightClass} `}>
-                                        <span>{item.value_text}</span>
+                    <div className="col-span-1 md:col-span-2 lg:col-span-4 ">
+                        <ChartCard
+                            title="Utilized EAST Services">
+                            <div className="relative w-full h-64 sm:h-80">
+                                <Bar
+                                    data={eastStudentServicesBar}
+                                    options={eastStudentServicesOptions} />
+                            </div>
+                        </ChartCard>
+                    </div>
+
+                    <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                        <ChartCard
+                            title="Student Confidence"
+                        >
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                {data.studentConfidence?.map((item) => (
+                                    <GaugeChart
+                                        key={item.subquestion_text}
+                                        value={Number(item.average)}
+                                        label={item.subquestion_text}
+                                        hoverLabel={"TEST"}
+                                    />
+                                ))}
+                            </div>
+                        </ChartCard>
+                    </div>
+
+                    <div className="col-span-1 md:col-span-2 lg:col-span-9">
+                        <ChartCard
+                            title="Utilized Engaged Learning Experiences by Percent"
+                        >
+                            <div className="space-y-3 min-w-full h-full self-start">
+                                <div className="flex flex-col lg:flex-row items-center gap-8 w-full min-w-0">
+                                    <ul className="flex flex-col gap-3 shrink-0 w-full lg:w-auto lg:min-w-40 lg:pl-25 min-w-0">
+                                        {engagedLearning.labels?.map((labelHours: string, idx: number) => (
+                                            <li key={labelHours} className="flex items-center gap-2 text-sm text-gray-700 min-w-0">
+                                                <span
+                                                    className="inline-block w-3.5 h-3.5 rounded-sm shrink-0"
+                                                    style={{ backgroundColor: colors[idx % colors?.length] }}
+                                                />
+                                                <span className="truncate">{labelHours}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <div className="relative w-full h-64 lg:h-80 flex-1 min-w-0">
+                                        <Pie
+                                            options={pieOptions}
+                                            data={coloredLearningExperiences}
+                                        />
                                     </div>
-
-                                    <span className={`flex items-center gap-3 ${highlightClass} `}>
-                                        {item.percentage} %
-                                    </span>
                                 </div>
-                            );
-                        })}
+                            </div>
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                <ChartCard
-                    title="Age">
-                    <div className="relative w-full h-64 sm:h-72">
-                        <Bar
-                            data={ageStats}
-                            options={barChartOptions} />
+                    <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                        <ChartCard
+                            title="Gender"
+                        >
+                            <div className="space-y-3 min-w-full ">
+                                {data.gender?.map((item) => {
+                                    const maxNumAlum = data.gender[0]?.percentage;
+                                    const isTopTied = item.percentage === maxNumAlum;
+                                    const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+
+                                    return (
+                                        <div
+                                            key={item.value_text}
+                                            className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                        >
+                                            <div className={`flex items-center gap-3 ${highlightClass} `}>
+                                                <span>{item.value_text}</span>
+                                            </div>
+
+                                            <span className={`flex items-center gap-3 ${highlightClass} `}>
+                                                {item.percentage} %
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                <ChartCard
-                    title="Veteran Status"
-                >
-                    <div className="space-y-3 min-w-full ">
-                        {data.veteran?.map((item) => {
-                            const maxNumAlum = data.veteran[0]?.percentage;
-                            const isTopTied = item.percentage === maxNumAlum;
-                            const highlightClass = isTopTied ? 'font-bold text-lg' : '';
-
-                            return (
-                                <div
-                                    key={item.value_text}
-                                    className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
-                                >
-                                    <div className={`flex items-center gap-3 ${highlightClass} `}>
-                                        <span>{item.value_text}</span>
-                                    </div>
-
-                                    <span className={`flex items-center gap-3 ${highlightClass} `}>
-                                        {item.percentage} %
-                                    </span>
-                                </div>
-                            );
-                        })}
+                    <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                        <ChartCard
+                            title="Age">
+                            <div className="relative w-full h-64 sm:h-72">
+                                <Bar
+                                    data={ageStats}
+                                    options={barChartOptions} />
+                            </div>
+                        </ChartCard>
                     </div>
-                </ChartCard>
-            </div>
+
+                    <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                        <ChartCard
+                            title="Veteran Status"
+                        >
+                            <div className="space-y-3 min-w-full ">
+                                {data.veteran?.map((item) => {
+                                    const maxNumAlum = data.veteran[0]?.percentage;
+                                    const isTopTied = item.percentage === maxNumAlum;
+                                    const highlightClass = isTopTied ? 'font-bold text-lg' : '';
+
+                                    return (
+                                        <div
+                                            key={item.value_text}
+                                            className="flex items-center justify-between rounded-lg border p-3 pl-8 pr-8"
+                                        >
+                                            <div className={`flex items-center gap-3 ${highlightClass} `}>
+                                                <span>{item.value_text}</span>
+                                            </div>
+
+                                            <span className={`flex items-center gap-3 ${highlightClass} `}>
+                                                {item.percentage} %
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </ChartCard>
+                    </div></>)}
+
 
         </div>
     )

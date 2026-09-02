@@ -108,9 +108,10 @@ const AUTOPage: React.FC<Props> = ({ numPerProgram, department_id, departmentNam
                         <div key={i} className="h-28 bg-gray-200 rounded-lg"></div>
                     ))}
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="h-64 bg-gray-200 rounded-lg"></div>
-                    <div className="h-64 bg-gray-200 rounded-lg"></div>
+                <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
+                    <div className="h-64 bg-gray-200 rounded-lg col-span-3"></div>
                 </div>
             </div>) : (
                 <>
