@@ -165,7 +165,7 @@ async function saveAlumniSubRecords(connection, alumniId, payload) {
         } else {
             await connection.query(
                 `INSERT INTO employment
-                 (alumni_id, employer_id, alt_employer_name, job_position, salary, city, state, country, yrs_exp, is_current)
+                 (alumni_id, employer_id, alt_employer_name, job_position, salary_STRING, city, state, country, yrs_exp, is_current)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     alumniId,
